@@ -46,6 +46,7 @@
 #include "definitions.h"
 #include "device.h"
 #include "../src/AS5600.h"
+#include "../src/control.h"
 
 
 
@@ -179,17 +180,12 @@ void SYS_Initialize ( void* data )
 
 
 	GPIO_Initialize();
-
     I2C1_Initialize();
-
 	UART2_Initialize();
-
     TMR1_Initialize();
-    
-
     MCPWM_Initialize();
-    
     AS5600_Initialize();
+    Control_initialize();
 
 
 

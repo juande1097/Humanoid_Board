@@ -45,7 +45,7 @@ extern "C" {
 #endif
     
     #define AS5600_SLAVE_ADDRESS 0b0110110 
-    #define AS5600_BITS_RESOLUTION 12
+    #define AS5600_RESOLUTION 4096
 
     
     //AS5600 Register Map
@@ -62,6 +62,7 @@ extern "C" {
     #define AS5600_BURN_REG        0xFF
 
     #define SPEED_CONSTANT         1200
+    #define TURN_DEGREES           360
 
     
     
@@ -73,7 +74,7 @@ enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OU
     typedef struct
     {
         float                              position;               //position of the motor in degrees
-        float                              old_position;           //past position of the motor in degrees
+        float                              old_position;           //old position of the motor in degrees
         int16_t                            turns;                  //Motor turns in integers
         float                              displacement;           //displacement in revolutions 
         float                              speed;                  //in rpm
@@ -89,6 +90,7 @@ enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OU
     void AS5600_ReadStatusPosition(void);           //Read position and status variable of the as5600_sensor 
     void AS5600_ReadPosition(void);                 //Read position variable of the as5600_sensor 
     void AS5600_UpdateDirection(uint16_t direction);//Update direction of the motor 
+    void AS5600_UpdateSerialData (void);
 
     /**********Peripheral call backs**********/
     void I2C1_callback(uintptr_t context);
