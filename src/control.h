@@ -51,7 +51,16 @@ extern "C" {
         
 
     }control_data;
-
+    
+    typedef struct
+    {
+        float error;
+        float prev_error;
+        float deriv_error;
+        float integral_error;
+        float pwm_output;
+        
+    }PID_data;
     
     /**********Control Specific Functions**********/
     void Control_initialize(void);
@@ -59,8 +68,11 @@ extern "C" {
     void Control_UpdateSpeedAcceleration(void);
     void Control_UpdateDirection(float pwm_duty);
     void Control_SetDutyPeriod(float pwm_duty);
+    void Control_SuperTwisting(void);
+    void Control_SendData(void);
 
-    
+    //Callback funcgtions 
+    void UART2_callback(uintptr_t context);
 
     /* Provide C++ Compatibility */
 #ifdef __cplusplus

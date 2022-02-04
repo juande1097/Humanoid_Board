@@ -40,7 +40,7 @@ uint16_t duty_step = 60; // 1%
 void I2C1_callback(uintptr_t context)
 {
     AS5600_UpdateData();
-    Control_PID(5,0.02,0.5); // Control_PID(0.068,0.08,0.0025); (100,0.045,10)
+    Control_PID(40,0.5,0.5); // Control_PID(0.068,0.08,0.0025); (100,0.045,10), (40,0.5,0.5)
     //AS5600_UpdateSerialData();
     //UART2_Write(&uart_sent_data[0],15);
 }
