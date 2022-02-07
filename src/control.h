@@ -20,6 +20,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 
 #include "AS5600.h"
 #include "config/default/peripheral/mcpwm/plib_mcpwm.h"
@@ -62,14 +63,27 @@ extern "C" {
         
     }PID_data;
     
+    typedef struct
+    {
+        float error;
+        float prev_error;
+        float deriv_error;
+        float sigma;
+        float omega;
+        float prev_omega;
+        float pwm_output;
+        
+    }STA_data;
+    
     /**********Control Specific Functions**********/
     void Control_initialize(void);
     void Control_PID(float kp, float ki, float kd);
     void Control_UpdateSpeedAcceleration(void);
     void Control_UpdateDirection(float pwm_duty);
     void Control_SetDutyPeriod(float pwm_duty);
-    void Control_SuperTwisting(void);
+    void Control_SuperTwisting(float const_c1, float const_c2, float const_b);
     void Control_SendData(void);
+    int Control_Sign(float data);
 
     //Callback funcgtions 
     void UART2_callback(uintptr_t context);
