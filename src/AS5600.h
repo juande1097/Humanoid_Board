@@ -21,6 +21,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "config/default/peripheral/i2c/master/plib_i2c1_master.h"
+#include "config/default/peripheral/i2c/master/plib_i2c2_master.h"
+#include "config/default/peripheral/i2c/master/plib_i2c3_master.h"
+#include "config/default/peripheral/i2c/master/plib_i2c4_master.h"
 #include "config/default/peripheral/i2c/master/plib_i2c_master_common.h"
 #include "config/default/peripheral/tmr1/plib_tmr1.h"
 #include "config/default/peripheral/tmr1/plib_tmr1_common.h"
@@ -86,14 +89,16 @@ enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OU
 
     /**********Module Specific Functions**********/
     void AS5600_Initialize(void);                   //Initializes the AD4111
-    void AS5600_UpdateData(void);                   //Update all the variables of the as5600_sensor struct
-    void AS5600_ReadStatusPosition(void);           //Read position and status variable of the as5600_sensor 
-    void AS5600_ReadPosition(void);                 //Read position variable of the as5600_sensor 
-    void AS5600_UpdateDirection(uint16_t direction);//Update direction of the motor 
+    void AS5600_UpdateData(as5600_sensor *sensor);                   //Update all the variables of the as5600_sensor struct
+    void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) ;           //Read position and status variable of the as5600_sensor 
+    void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
     void AS5600_UpdateSerialData (void);
 
     /**********Peripheral call backs**********/
     void I2C1_callback(uintptr_t context);
+    void I2C2_callback(uintptr_t context);
+    void I2C3_callback(uintptr_t context);
+    void I2C4_callback(uintptr_t context);
     void Timer1_callback(uint32_t status, uintptr_t context);
 
 

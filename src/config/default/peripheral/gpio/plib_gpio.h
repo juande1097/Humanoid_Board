@@ -71,24 +71,6 @@
 #define LED4_Get()               ((PORTF >> 13) & 0x1)
 #define LED4_PIN                  GPIO_PIN_RF13
 
-/*** Macros for Motor_dir_A pin ***/
-#define Motor_dir_A_Set()               (LATDSET = (1<<8))
-#define Motor_dir_A_Clear()             (LATDCLR = (1<<8))
-#define Motor_dir_A_Toggle()            (LATDINV= (1<<8))
-#define Motor_dir_A_OutputEnable()      (TRISDCLR = (1<<8))
-#define Motor_dir_A_InputEnable()       (TRISDSET = (1<<8))
-#define Motor_dir_A_Get()               ((PORTD >> 8) & 0x1)
-#define Motor_dir_A_PIN                  GPIO_PIN_RD8
-
-/*** Macros for Motor_dir_B pin ***/
-#define Motor_dir_B_Set()               (LATDSET = (1<<12))
-#define Motor_dir_B_Clear()             (LATDCLR = (1<<12))
-#define Motor_dir_B_Toggle()            (LATDINV= (1<<12))
-#define Motor_dir_B_OutputEnable()      (TRISDCLR = (1<<12))
-#define Motor_dir_B_InputEnable()       (TRISDSET = (1<<12))
-#define Motor_dir_B_Get()               ((PORTD >> 12) & 0x1)
-#define Motor_dir_B_PIN                  GPIO_PIN_RD12
-
 /*** Macros for LED5 pin ***/
 #define LED5_Set()               (LATDSET = (1<<13))
 #define LED5_Clear()             (LATDCLR = (1<<13))

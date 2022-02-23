@@ -20,6 +20,9 @@
               <logicalFolder name="f1" displayName="master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c1_master.h</itemPath>
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c_master_common.h</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.h</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c3_master.h</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c4_master.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f7" displayName="mcpwm" projectFiles="true">
@@ -71,6 +74,9 @@
             <logicalFolder name="f5" displayName="i2c" projectFiles="true">
               <logicalFolder name="f1" displayName="master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c1_master.c</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.c</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c3_master.c</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c4_master.c</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f7" displayName="mcpwm" projectFiles="true">
@@ -103,6 +109,9 @@
         <itemPath>../src/config/default/default.mhc/dfp.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/GraphSettings.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/i2c1.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/i2c2.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/i2c3.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/i2c4.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/mcpwm.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/project.yml</itemPath>
         <itemPath>../src/config/default/default.mhc/settings.yml</itemPath>
@@ -479,6 +488,8 @@
         <property key="memories.programmemory.start" value="0x1d000000"/>
         <property key="memories.rww" value="true"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/juand/HarmonyProjects/Humanoid_Board/firmware/Humanoid_Board.X/debug/default/Humanoid_Board_ptg"/>
         <property key="programmerToGoImageName" value="Humanoid_Board_ptg"/>
         <property key="programmertogo.imagename" value=""/>
         <property key="programoptions.donoteraseauxmem" value="false"/>

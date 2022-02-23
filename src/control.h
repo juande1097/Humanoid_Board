@@ -33,6 +33,7 @@ extern "C" {
 
 
 #define DUTY_MAX_PERIOD PTPER
+#define CONTROL_PERIOD 0.05    
 
     
     enum control_type {NONE, P, PI, PD, PID};
@@ -65,24 +66,32 @@ extern "C" {
     
     typedef struct
     {
+        float ref;
+        float *position;
+        float period;
         float error;
         float prev_error;
         float deriv_error;
+        float const_c1;
+        float const_c2;
+        float const_b;
         float sigma;
         float omega;
         float prev_omega;
         float pwm_output;
+        uint8_t motor_number;
         
     }STA_data;
     
     /**********Control Specific Functions**********/
-    void Control_initialize(void);
-    void Control_PID(float kp, float ki, float kd);
+    void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number);
+    //void Control_PID(float kp, float ki, float kd);
     void Control_UpdateSpeedAcceleration(void);
-    void Control_UpdateDirection(float pwm_duty);
+    //void Control_UpdateDirection(float pwm_duty);
     void Control_SetDutyPeriod(float pwm_duty);
-    void Control_SuperTwisting(float const_c1, float const_c2, float const_b);
-    void Control_SendData(void);
+    void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data);
+    void Control_SuperTwisting(STA_data *SMC_ST_data);
+    void Control_SendData();
     int Control_Sign(float data);
 
     //Callback funcgtions 

@@ -181,11 +181,14 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
     I2C1_Initialize();
+    I2C2_Initialize();
+    I2C3_Initialize();
+    I2C4_Initialize();
 	UART2_Initialize();
     TMR1_Initialize();
     MCPWM_Initialize();
     AS5600_Initialize();
-    Control_initialize();
+    //Control_initialize();
 
 
 
