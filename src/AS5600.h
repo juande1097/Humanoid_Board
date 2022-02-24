@@ -30,6 +30,7 @@
 #include "config/default/peripheral/gpio/plib_gpio.h"
 #include "config/default/peripheral/uart/plib_uart2.h"
 #include "config/default/peripheral/uart/plib_uart_common.h"
+#include "config/default/peripheral/gpio/plib_gpio.h"
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */

@@ -257,6 +257,13 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_7_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM5H}
+  - type: String
     attributes: {id: BSP_PIN_7_MODE}
     children:
     - type: Values
@@ -438,6 +445,13 @@ children:
       children:
       - type: User
         attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_9_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM6H}
   - type: String
     attributes: {id: BSP_PIN_9_MODE}
     children:
@@ -1250,13 +1264,41 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM5_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM5_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM6_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM6_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
   - type: Hex
     attributes: {id: PMD4_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '267387390'}
+        attributes: {id: core, value: '264241662'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
@@ -1286,12 +1328,33 @@ children:
       - type: Dynamic
         attributes: {id: core, value: '256'}
   - type: Hex
+    attributes: {id: SYS_PORT_A_CNPU}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: Hex
+    attributes: {id: SYS_PORT_A_TRIS}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: Hex
     attributes: {id: SYS_PORT_B_ANSEL}
     children:
     - type: Values
       children:
       - type: Dynamic
         attributes: {id: core, value: '512'}
+  - type: Hex
+    attributes: {id: SYS_PORT_B_CNPU}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
   - type: Hex
     attributes: {id: SYS_PORT_B_TRIS}
     children:

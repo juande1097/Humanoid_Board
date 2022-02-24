@@ -29,11 +29,14 @@
 
 as5600_sensor sensor_1;
 as5600_sensor sensor_2;
+as5600_sensor sensor_3;
 
 STA_data motor_control_1;
 STA_data motor_control_2;
+STA_data motor_control_3;
 
 uint8_t uart_sent_data[20] = {0};
+uint8_t i2c_data2[5]={0};
 
 uint16_t pwm_duty = 3000; //max 6000 %45 2700, 
 uint16_t counter2 = 0;
@@ -46,13 +49,15 @@ void I2C1_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_1);
     Control_SuperTwisting(&motor_control_1);
-    Control_SendData();
+    
     LED4_Toggle();
 }
 
 void I2C2_callback(uintptr_t context)
 {
-
+    AS5600_UpdateData(&sensor_3);
+    Control_SuperTwisting(&motor_control_3);
+    Control_SendData();
 }
 void I2C3_callback(uintptr_t context)
 {
@@ -70,8 +75,11 @@ void Timer1_callback(uint32_t status, uintptr_t context) //50ms
     LED5_Toggle();
     AS5600_ReadStatusPosition(&sensor_1,1);
     AS5600_ReadStatusPosition(&sensor_2,4);
+    AS5600_ReadStatusPosition(&sensor_3,2);
+    //I2C2_Write(AS5600_SLAVE_ADDRESS,&i2c_data2[0],2);
+    
     counter2++;
-      
+  
 }
 
 
@@ -95,10 +103,20 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_2.direction = 0;
     sensor_2.magnet_error =0;
     sensor_2.variable_readed = NOTING_READED;
+    
+    sensor_3.position = 0.0;
+    sensor_3.old_position = 0.0;
+    sensor_3.turns = 0;
+    sensor_3.displacement = 0.0;
+    sensor_3.speed = 0.0;
+    sensor_3.direction = 0;
+    sensor_3.magnet_error =0;
+    sensor_3.variable_readed = NOTING_READED;
     //AS5600_UpdateDirection(sensor_1.direction); //Update the direction of the motor
     
     Control_initialize(&motor_control_1,&sensor_1,1);
     Control_initialize(&motor_control_2,&sensor_2,2);
+    Control_initialize(&motor_control_3,&sensor_3,3);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
@@ -107,7 +125,8 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     TMR1_CallbackRegister(&Timer1_callback,0);  
     
     AS5600_ReadPosition(&sensor_1);
-    AS5600_ReadPosition(&sensor_2);
+    //AS5600_ReadPosition(&sensor_2);
+    //AS5600_ReadPosition(&sensor_3);
     
 }
 void AS5600_UpdateData(as5600_sensor *sensor)
@@ -179,7 +198,7 @@ void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) //Read po
             I2C1_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;
         case 2:
-            //I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
+            I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;    
         case 3:
             //I2C3_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);

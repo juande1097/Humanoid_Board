@@ -48,6 +48,8 @@ int main ( void )
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,0);
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_3,0);
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_4,0);
+    MCPWM_ChannelPrimaryDutySet(MCPWM_CH_5,0);
+    MCPWM_ChannelPrimaryDutySet(MCPWM_CH_6,0);
     MCPWM_Start();
 
     while ( true )

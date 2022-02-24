@@ -7,9 +7,10 @@ extern as5600_sensor sensor_2;
 
 extern STA_data motor_control_1;
 extern STA_data motor_control_2;
+extern STA_data motor_control_3;
 //control_data control;
-uint8_t Data_Read_U2[5] = {0};
-static uint8_t uart_sent_data[32] = {0};
+uint8_t Data_Read_U2[6] = {0};
+static uint8_t uart_sent_data[48] = {0};
 
 //static PID_data PID_actual_data;
 //static STA_data SMC_ST_data;
@@ -20,11 +21,12 @@ void UART2_callback(uintptr_t context)
 {
     motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
     motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
+    motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
     
     //PID_actual_data.prev_error = 0;
     //PID_actual_data.deriv_error = 0;
     //PID_actual_data.integral_error = 0;
-    UART2_Read(&Data_Read_U2[0],5);
+    UART2_Read(&Data_Read_U2[0],6);
 }
 
 void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number)
@@ -46,7 +48,7 @@ void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t mo
     
     UART2_ReadCallbackRegister(&UART2_callback,0);
     
-    UART2_Read(&Data_Read_U2[0],5);
+    UART2_Read(&Data_Read_U2[0],6);
 }
 
 /*void Control_PID(float kp, float ki, float kd)
@@ -141,6 +143,20 @@ void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data)
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_4,0);
             }
             break;    
+            case 3:
+            if (SMC_ST_data.pwm_output > 0.0) //clockwise
+            {
+                duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_5,0);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_6,duty_period);
+            }
+            if (SMC_ST_data.pwm_output < 0.0) ////counterclockwise
+            {
+               duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_5,duty_period);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_6,0);
+            }
+            break;  
     }
     
     
@@ -204,8 +220,29 @@ void Control_SendData()
     uart_sent_data[30]  = (int32_t)(motor_control_2.pwm_output*100) >>8;
     uart_sent_data[31]  = (int32_t)(motor_control_2.pwm_output*100);
     
+    //Position of the motor 3
+    uart_sent_data[32] = (int32_t)(*motor_control_3.position*100) >>24;
+    uart_sent_data[33] = (int32_t)(*motor_control_3.position*100) >>16;
+    uart_sent_data[34] = (int32_t)(*motor_control_3.position*100) >>8;
+    uart_sent_data[35] = (int32_t)(*motor_control_3.position*100);
+    //Reference of the motor
+    uart_sent_data[36] = (int32_t)(motor_control_3.ref*100) >>24;
+    uart_sent_data[37] = (int32_t)(motor_control_3.ref*100) >>16;
+    uart_sent_data[38] = (int32_t)(motor_control_3.ref*100) >>8;
+    uart_sent_data[39] = (int32_t)(motor_control_3.ref*100);
+    //Error of the motor
+    uart_sent_data[40]  = (int32_t)(motor_control_3.error*100) >>24;
+    uart_sent_data[41]  = (int32_t)(motor_control_3.error*100) >>16;
+    uart_sent_data[42]  = (int32_t)(motor_control_3.error*100) >>8;
+    uart_sent_data[43]  = (int32_t)(motor_control_3.error*100);
+    //Duty Output
+    uart_sent_data[44]  = (int32_t)(motor_control_3.pwm_output*100) >>24;
+    uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>16;
+    uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>8;
+    uart_sent_data[47]  = (int32_t)(motor_control_3.pwm_output*100);
+    
 
-    UART2_Write(&uart_sent_data[0],32);
+    UART2_Write(&uart_sent_data[0],48);
 }
 
 /*uint8_t uart_sent_data[15] = {0};
