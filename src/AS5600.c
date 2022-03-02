@@ -39,7 +39,7 @@ uint8_t uart_sent_data[20] = {0};
 uint8_t i2c_data2[5]={0};
 
 uint16_t pwm_duty = 3000; //max 6000 %45 2700, 
-uint16_t counter2 = 0;
+uint16_t counter = 0;
 uint8_t subiendo = 0; //0 subiendo
 uint16_t time_change = 200; //cada 1s
 uint16_t duty_step = 60; // 1%
@@ -57,7 +57,7 @@ void I2C2_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_3);
     Control_SuperTwisting(&motor_control_3);
-    Control_SendData();
+    //Control_SendData();
 }
 void I2C3_callback(uintptr_t context)
 {
@@ -70,7 +70,7 @@ void I2C4_callback(uintptr_t context)
     //Control_SendData(motor_control_2);
     
 }
-void Timer1_callback(uint32_t status, uintptr_t context) //50ms
+void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
     LED5_Toggle();
     AS5600_ReadStatusPosition(&sensor_1,1);
@@ -78,7 +78,12 @@ void Timer1_callback(uint32_t status, uintptr_t context) //50ms
     AS5600_ReadStatusPosition(&sensor_3,2);
     //I2C2_Write(AS5600_SLAVE_ADDRESS,&i2c_data2[0],2);
     
-    counter2++;
+    counter++;
+    if(counter >= 10)
+    {
+        counter =0;
+        Control_SendData();
+    }
   
 }
 

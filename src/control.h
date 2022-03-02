@@ -33,7 +33,7 @@ extern "C" {
 
 
 #define DUTY_MAX_PERIOD PTPER
-#define CONTROL_PERIOD 0.05    
+#define CONTROL_PERIOD 0.005    
 
     
     enum control_type {NONE, P, PI, PD, PID};

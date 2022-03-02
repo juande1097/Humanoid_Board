@@ -83,20 +83,20 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 06F88D3FDE2832C7BAEA441C1FDE4C8E
-- generatedChecksum: 0BB1244038DD9C1D54A389F1F4A72DC2
+- generatedChecksum: 572C74686F225C219ADAB91C1CD96AC7
   logicalPath: config/default/peripheral/tmr1
   name: plib_tmr1.c
   physicalPath: peripheral/tmr1
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 0BB1244038DD9C1D54A389F1F4A72DC2
-- generatedChecksum: B5BF4856A300725B5A3E614EC43EEE50
+  userChecksum: 572C74686F225C219ADAB91C1CD96AC7
+- generatedChecksum: 9CD536301EFF4975E48AFAEC26EE0B69
   logicalPath: config/default/peripheral/uart
   name: plib_uart2.c
   physicalPath: peripheral/uart
   security: NON_SECURE
   type: SOURCE
-  userChecksum: B5BF4856A300725B5A3E614EC43EEE50
+  userChecksum: 9CD536301EFF4975E48AFAEC26EE0B69
 - generatedChecksum: 7806B30ECAE0D18D08CD583D8775530D
   logicalPath: config/default/stdio
   name: xc32_monitor.c
