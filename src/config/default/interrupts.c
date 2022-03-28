@@ -68,8 +68,6 @@ void UART2_RX_InterruptHandler( void );
 void UART2_TX_InterruptHandler( void );
 void I2C2_BUS_InterruptHandler( void );
 void I2C2_MASTER_InterruptHandler( void );
-void I2C3_BUS_InterruptHandler( void );
-void I2C3_MASTER_InterruptHandler( void );
 void I2C4_BUS_InterruptHandler( void );
 void I2C4_MASTER_InterruptHandler( void );
 
@@ -114,16 +112,6 @@ void __ISR(_I2C2_BUS_VECTOR, ipl1SRS) I2C2_BUS_Handler (void)
 void __ISR(_I2C2_MASTER_VECTOR, ipl1SRS) I2C2_MASTER_Handler (void)
 {
     I2C2_MASTER_InterruptHandler();
-}
-
-void __ISR(_I2C3_BUS_VECTOR, ipl1SRS) I2C3_BUS_Handler (void)
-{
-    I2C3_BUS_InterruptHandler();
-}
-
-void __ISR(_I2C3_MASTER_VECTOR, ipl1SRS) I2C3_MASTER_Handler (void)
-{
-    I2C3_MASTER_InterruptHandler();
 }
 
 void __ISR(_I2C4_BUS_VECTOR, ipl1SRS) I2C4_BUS_Handler (void)

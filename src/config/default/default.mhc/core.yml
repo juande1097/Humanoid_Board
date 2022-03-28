@@ -19,6 +19,20 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_10_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM10L}
+  - type: String
+    attributes: {id: BSP_PIN_10_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
     attributes: {id: BSP_PIN_11_FUNCTION_TYPE}
     children:
     - type: Values
@@ -81,6 +95,13 @@ children:
       children:
       - type: User
         attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_3_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM10H}
   - type: String
     attributes: {id: BSP_PIN_3_MODE}
     children:
@@ -173,6 +194,13 @@ children:
       - type: User
         attributes: {value: ''}
   - type: String
+    attributes: {id: BSP_PIN_5_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM7H}
+  - type: String
     attributes: {id: BSP_PIN_5_MODE}
     children:
     - type: Values
@@ -180,19 +208,33 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_68_DIR}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Out}
+  - type: String
+    attributes: {id: BSP_PIN_68_FUNCTION_NAME}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Motor_dir_A}
+  - type: String
+    attributes: {id: BSP_PIN_68_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: GPIO}
+  - type: String
     attributes: {id: BSP_PIN_68_MODE}
     children:
     - type: Values
       children:
       - type: User
         attributes: {value: DIGITAL}
-  - type: String
-    attributes: {id: BSP_PIN_69_FUNCTION_TYPE}
-    children:
-    - type: Values
-      children:
-      - type: User
-        attributes: {value: SDA3}
   - type: String
     attributes: {id: BSP_PIN_69_MODE}
     children:
@@ -207,13 +249,6 @@ children:
       children:
       - type: User
         attributes: {value: DIGITAL}
-  - type: String
-    attributes: {id: BSP_PIN_70_FUNCTION_TYPE}
-    children:
-    - type: Values
-      children:
-      - type: User
-        attributes: {value: SCL3}
   - type: String
     attributes: {id: BSP_PIN_70_MODE}
     children:
@@ -249,6 +284,27 @@ children:
       children:
       - type: User
         attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_79_DIR}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Out}
+  - type: String
+    attributes: {id: BSP_PIN_79_FUNCTION_NAME}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Motor_dir_B}
+  - type: String
+    attributes: {id: BSP_PIN_79_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: GPIO}
   - type: String
     attributes: {id: BSP_PIN_79_MODE}
     children:
@@ -334,6 +390,13 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_87_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM11H}
+  - type: String
     attributes: {id: BSP_PIN_87_MODE}
     children:
     - type: Values
@@ -369,6 +432,13 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_91_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM9H}
+  - type: String
     attributes: {id: BSP_PIN_91_MODE}
     children:
     - type: Values
@@ -403,6 +473,13 @@ children:
       children:
       - type: User
         attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_95_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: PWM8H}
   - type: String
     attributes: {id: BSP_PIN_95_MODE}
     children:
@@ -479,21 +556,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_179_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_179_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C3_BUS_InterruptHandler}
+        attributes: {id: core, value: I2C3_BUS_Handler}
   - type: Boolean
     attributes: {id: EVIC_180_ENABLE}
     children:
@@ -521,21 +598,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_181_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_181_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C3_MASTER_InterruptHandler}
+        attributes: {id: core, value: I2C3_MASTER_Handler}
   - type: Boolean
     attributes: {id: EVIC_194_ENABLE}
     children:
@@ -1006,82 +1083,26 @@ children:
       - type: Dynamic
         attributes: {id: i2c2, value: 'false'}
   - type: Boolean
-    attributes: {id: I2C3_BUS_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'true'}
-  - type: Boolean
     attributes: {id: I2C3_BUS_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C3_BUS_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: I2C3_BUS_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C3_BUS_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C3_CLOCK_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'true'}
+        attributes: {id: core, value: 'true'}
   - type: Integer
     attributes: {id: I2C3_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
-  - type: Boolean
-    attributes: {id: I2C3_MASTER_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'true'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: I2C3_MASTER_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C3_MASTER_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: I2C3_MASTER_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C3_MASTER_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C3_SLAVE_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: Boolean
     attributes: {id: I2C3_SLAVE_INTERRUPT_ENABLE_UPDATE}
     children:
@@ -1089,20 +1110,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
-  - type: String
-    attributes: {id: I2C3_SLAVE_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: I2C3_SLAVE_Handler}
-  - type: Boolean
-    attributes: {id: I2C3_SLAVE_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c3, value: 'false'}
   - type: Boolean
     attributes: {id: I2C4_BUS_INTERRUPT_ENABLE}
     children:
@@ -1209,6 +1216,48 @@ children:
       - type: Dynamic
         attributes: {id: core, value: '0x1200'}
   - type: Boolean
+    attributes: {id: MCPWM10_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'false'}
+  - type: Integer
+    attributes: {id: MCPWM10_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: Boolean
+    attributes: {id: MCPWM11_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM11_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM12_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'false'}
+  - type: Integer
+    attributes: {id: MCPWM12_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: Boolean
     attributes: {id: MCPWM1_CLOCK_ENABLE}
     children:
     - type: Values
@@ -1292,20 +1341,62 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM7_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM7_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM8_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM8_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
+  - type: Boolean
+    attributes: {id: MCPWM9_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: mcpwm, value: 'true'}
+  - type: Integer
+    attributes: {id: MCPWM9_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '120000000'}
   - type: Hex
     attributes: {id: PMD4_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '264241662'}
+        attributes: {id: core, value: '167772670'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '4076879677'}
+        attributes: {id: core, value: '4077141821'}
   - type: Hex
     attributes: {id: PMD6_REG_VALUE}
     children:
@@ -1368,7 +1459,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '8192'}
+        attributes: {id: core, value: '12544'}
   - type: Hex
     attributes: {id: SYS_PORT_E_ANSEL}
     children:
@@ -1396,7 +1487,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '384'}
+        attributes: {id: core, value: '448'}
   - type: Hex
     attributes: {id: SYS_PORT_G_TRIS}
     children:

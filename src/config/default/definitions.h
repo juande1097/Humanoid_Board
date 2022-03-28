@@ -50,7 +50,6 @@
 #include <stdbool.h>
 #include "peripheral/i2c/master/plib_i2c1_master.h"
 #include "peripheral/i2c/master/plib_i2c2_master.h"
-#include "peripheral/i2c/master/plib_i2c3_master.h"
 #include "peripheral/i2c/master/plib_i2c4_master.h"
 #include "peripheral/uart/plib_uart2.h"
 #include "peripheral/clk/plib_clk.h"

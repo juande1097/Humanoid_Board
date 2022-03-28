@@ -59,10 +59,6 @@ void I2C2_callback(uintptr_t context)
     Control_SuperTwisting(&motor_control_3);
     //Control_SendData();
 }
-void I2C3_callback(uintptr_t context)
-{
-
-}
 void I2C4_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_2);
@@ -79,7 +75,7 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
     //I2C2_Write(AS5600_SLAVE_ADDRESS,&i2c_data2[0],2);
     
     counter++;
-    if(counter >= 10)
+    if(counter >= 200)
     {
         counter =0;
         Control_SendData();
@@ -119,13 +115,12 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_3.variable_readed = NOTING_READED;
     //AS5600_UpdateDirection(sensor_1.direction); //Update the direction of the motor
     
-    Control_initialize(&motor_control_1,&sensor_1,1);
-    Control_initialize(&motor_control_2,&sensor_2,2);
-    Control_initialize(&motor_control_3,&sensor_3,3);
+    Control_initialize(&motor_control_1,&sensor_1,1, 500, 0.9, 2);
+    Control_initialize(&motor_control_2,&sensor_2,2, 400, 0.7, 2);
+    Control_initialize(&motor_control_3,&sensor_3,3, 400, 0.7, 2);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
-    I2C3_CallbackRegister(&I2C3_callback,0);
     I2C4_CallbackRegister(&I2C4_callback,0);
     TMR1_CallbackRegister(&Timer1_callback,0);  
     

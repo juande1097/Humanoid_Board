@@ -29,7 +29,7 @@ void UART2_callback(uintptr_t context)
     UART2_Read(&Data_Read_U2[0],6);
 }
 
-void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number)
+void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {
     SMC_ST_data->ref = 50;
     SMC_ST_data->position = &sensor->position;
@@ -37,9 +37,9 @@ void Control_initialize(STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t mo
     SMC_ST_data->error = 0;
     SMC_ST_data->prev_error = 0;
     SMC_ST_data->deriv_error = 0;
-    SMC_ST_data->const_c1 = 400; //245
-    SMC_ST_data->const_c2 = 0.7; //0.95
-    SMC_ST_data->const_b =  2; //0.3
+    SMC_ST_data->const_c1 = const_c1; //245 400    //el bueno para el 2 1500 0.7 2 con vibracion
+    SMC_ST_data->const_c2 = const_c2; //0.95 0.7
+    SMC_ST_data->const_b =  const_b; //0.3 2
     SMC_ST_data->sigma = 0;
     SMC_ST_data->omega = 0;
     SMC_ST_data->prev_omega = 0;
@@ -119,12 +119,19 @@ void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data)
             if (SMC_ST_data.pwm_output > 0.0) //clockwise
             {
                 duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                //MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
+                //Motor_dir_A_Set();
+                //Motor_dir_B_Clear();
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,duty_period);
             }
             if (SMC_ST_data.pwm_output < 0.0) ////counterclockwise
             {
-               duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                //MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
+                //Motor_dir_A_Clear();
+                //Motor_dir_B_Set();
+                //duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,0);
             }
@@ -143,7 +150,7 @@ void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data)
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_4,0);
             }
             break;    
-            case 3:
+        case 3:
             if (SMC_ST_data.pwm_output > 0.0) //clockwise
             {
                 duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
@@ -157,6 +164,34 @@ void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data)
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_6,0);
             }
             break;  
+        case 4:
+            if (SMC_ST_data.pwm_output > 0.0) //clockwise
+            {
+                duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_7,0);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_8,duty_period);
+            }
+            if (SMC_ST_data.pwm_output < 0.0) ////counterclockwise
+            {
+               duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_7,duty_period);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_8,0);
+            }
+            break; 
+        case 5:
+            if (SMC_ST_data.pwm_output > 0.0) //clockwise
+            {
+                duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_9,0);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_11,duty_period);
+            }
+            if (SMC_ST_data.pwm_output < 0.0) ////counterclockwise
+            {
+               duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_9,duty_period);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_11,0);
+            }
+            break; 
     }
     
     

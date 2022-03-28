@@ -12,19 +12,54 @@ children:
       - type: Dynamic
         attributes: {id: mcpwm, value: INT_SOURCE_PWM1}
   - type: KeyValueSet
+    attributes: {id: IOCON10__PMOD}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: IOCON10__SWAP}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
     attributes: {id: IOCON1__PMOD}
     children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '3'}
+        attributes: {value: '0'}
   - type: KeyValueSet
     attributes: {id: IOCON1__SWAP}
     children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '0'}
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: IOCON2__SWAP}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: IOCON7__SWAP}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: IOCON8__SWAP}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
   - type: Boolean
     attributes: {id: MCPWM_CHANNEL1}
     children:
@@ -32,6 +67,27 @@ children:
       children:
       - type: User
         attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL10}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL11}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL12}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
   - type: Boolean
     attributes: {id: MCPWM_CHANNEL2}
     children:
@@ -67,6 +123,45 @@ children:
       children:
       - type: User
         attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL7}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL8}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: MCPWM_CHANNEL9}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Comment
+    attributes: {id: MCPWM_CLOCK_ENABLE_COMMENT10}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Comment
+    attributes: {id: MCPWM_CLOCK_ENABLE_COMMENT12}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
   - type: Comment
     attributes: {id: MCPWM_FREQ_CH1}
     children:
@@ -181,14 +276,14 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: '248832'}
+        attributes: {id: mcpwm, value: '245764'}
   - type: Hex
     attributes: {id: MCPWM_IOCON10}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: '49152'}
+        attributes: {id: mcpwm, value: '246788'}
   - type: Hex
     attributes: {id: MCPWM_IOCON11}
     children:
@@ -209,7 +304,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: '49152'}
+        attributes: {id: mcpwm, value: '245764'}
   - type: Hex
     attributes: {id: MCPWM_IOCON3}
     children:
@@ -244,14 +339,14 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: '49152'}
+        attributes: {id: mcpwm, value: '245764'}
   - type: Hex
     attributes: {id: MCPWM_IOCON8}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: '49152'}
+        attributes: {id: mcpwm, value: '245764'}
   - type: Hex
     attributes: {id: MCPWM_IOCON9}
     children:
