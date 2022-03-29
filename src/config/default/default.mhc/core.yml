@@ -619,21 +619,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_194_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_194_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C4_BUS_InterruptHandler}
+        attributes: {id: core, value: I2C4_BUS_Handler}
   - type: Boolean
     attributes: {id: EVIC_195_ENABLE}
     children:
@@ -661,21 +661,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_196_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_196_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C4_MASTER_InterruptHandler}
+        attributes: {id: core, value: I2C4_MASTER_Handler}
   - type: Boolean
     attributes: {id: EVIC_41_ENABLE}
     children:
@@ -829,21 +829,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_59_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_59_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C2_BUS_InterruptHandler}
+        attributes: {id: core, value: I2C2_BUS_Handler}
   - type: Boolean
     attributes: {id: EVIC_60_ENABLE}
     children:
@@ -871,21 +871,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_61_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_61_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: I2C2_MASTER_InterruptHandler}
+        attributes: {id: core, value: I2C2_MASTER_Handler}
   - type: Boolean
     attributes: {id: I2C1_BUS_INTERRUPT_ENABLE}
     children:
@@ -985,82 +985,26 @@ children:
       - type: Dynamic
         attributes: {id: i2c1, value: 'false'}
   - type: Boolean
-    attributes: {id: I2C2_BUS_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'true'}
-  - type: Boolean
     attributes: {id: I2C2_BUS_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C2_BUS_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: I2C2_BUS_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C2_BUS_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C2_CLOCK_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'true'}
+        attributes: {id: core, value: 'true'}
   - type: Integer
     attributes: {id: I2C2_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
-  - type: Boolean
-    attributes: {id: I2C2_MASTER_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'true'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: I2C2_MASTER_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C2_MASTER_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: I2C2_MASTER_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C2_MASTER_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C2_SLAVE_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: Boolean
     attributes: {id: I2C2_SLAVE_INTERRUPT_ENABLE_UPDATE}
     children:
@@ -1068,20 +1012,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
-  - type: String
-    attributes: {id: I2C2_SLAVE_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: I2C2_SLAVE_Handler}
-  - type: Boolean
-    attributes: {id: I2C2_SLAVE_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c2, value: 'false'}
   - type: Boolean
     attributes: {id: I2C3_BUS_INTERRUPT_ENABLE_UPDATE}
     children:
@@ -1111,82 +1041,26 @@ children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
   - type: Boolean
-    attributes: {id: I2C4_BUS_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'true'}
-  - type: Boolean
     attributes: {id: I2C4_BUS_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C4_BUS_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: I2C4_BUS_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C4_BUS_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C4_CLOCK_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'true'}
+        attributes: {id: core, value: 'true'}
   - type: Integer
     attributes: {id: I2C4_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
-  - type: Boolean
-    attributes: {id: I2C4_MASTER_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'true'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: I2C4_MASTER_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
-  - type: String
-    attributes: {id: I2C4_MASTER_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: I2C4_MASTER_InterruptHandler}
-  - type: Boolean
-    attributes: {id: I2C4_MASTER_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C4_SLAVE_INTERRUPT_ENABLE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: Boolean
     attributes: {id: I2C4_SLAVE_INTERRUPT_ENABLE_UPDATE}
     children:
@@ -1194,20 +1068,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
-  - type: String
-    attributes: {id: I2C4_SLAVE_INTERRUPT_HANDLER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: I2C4_SLAVE_Handler}
-  - type: Boolean
-    attributes: {id: I2C4_SLAVE_INTERRUPT_HANDLER_LOCK}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: i2c4, value: 'false'}
   - type: String
     attributes: {id: KEIL_STACK_HEAP_SIZE}
     children:
@@ -1235,14 +1095,14 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM11_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM12_CLOCK_ENABLE}
     children:
@@ -1291,112 +1151,112 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM3_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM4_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM4_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM5_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM5_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM6_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM6_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM7_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM7_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM8_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM8_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Boolean
     attributes: {id: MCPWM9_CLOCK_ENABLE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: mcpwm, value: 'true'}
+        attributes: {id: mcpwm, value: 'false'}
   - type: Integer
     attributes: {id: MCPWM9_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '120000000'}
+        attributes: {id: core, value: '0'}
   - type: Hex
     attributes: {id: PMD4_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '167772670'}
+        attributes: {id: core, value: '268173822'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '4077141821'}
+        attributes: {id: core, value: '4077797181'}
   - type: Hex
     attributes: {id: PMD6_REG_VALUE}
     children:

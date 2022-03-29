@@ -183,9 +183,7 @@ void SYS_Initialize ( void* data )
 
     I2C1_Initialize();
 
-    I2C2_Initialize();
 
-    I2C4_Initialize();
 
 	UART2_Initialize();
     TMR1_Initialize();

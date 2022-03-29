@@ -61,10 +61,6 @@ void EVIC_Initialize( void )
     IPC14SET = 0x4 | 0x0;  /* UART2_FAULT:  Priority 1 / Subpriority 0 */
     IPC14SET = 0x400 | 0x0;  /* UART2_RX:  Priority 1 / Subpriority 0 */
     IPC14SET = 0x40000 | 0x0;  /* UART2_TX:  Priority 1 / Subpriority 0 */
-    IPC14SET = 0x4000000 | 0x0;  /* I2C2_BUS:  Priority 1 / Subpriority 0 */
-    IPC15SET = 0x400 | 0x0;  /* I2C2_MASTER:  Priority 1 / Subpriority 0 */
-    IPC48SET = 0x40000 | 0x0;  /* I2C4_BUS:  Priority 1 / Subpriority 0 */
-    IPC49SET = 0x4 | 0x0;  /* I2C4_MASTER:  Priority 1 / Subpriority 0 */
 
 
 

@@ -24,7 +24,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr1, value: '467'}
+        attributes: {id: tmr1, value: '936'}
   - type: KeyValueSet
     attributes: {id: TIMER1_PRE_SCALER}
     children:
@@ -44,7 +44,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '0.5'}
+        attributes: {value: '1.0'}
   - type: Integer
     attributes: {id: TMR1_PRESCALER_VALUE}
     children:

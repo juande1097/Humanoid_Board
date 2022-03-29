@@ -28,18 +28,17 @@
 
 
 as5600_sensor sensor_1;
-as5600_sensor sensor_2;
-as5600_sensor sensor_3;
-
-STA_data motor_control_1;
-STA_data motor_control_2;
-STA_data motor_control_3;
 
 uint8_t uart_sent_data[20] = {0};
-uint8_t i2c_data2[5]={0};
 
-uint16_t pwm_duty = 3000; //max 6000 %45 2700, 
-uint16_t counter = 0;
+
+uint16_t pwm_duty = 0; //max 6000 %45 2700, 
+uint16_t pwm_duty_period = 0;
+uint32_t counter = 0;
+uint16_t counter_send = 0;
+uint16_t counter_change = 0;
+uint32_t idx = 0;
+float periods[4]={0.01,0.005,0.0075,0};
 uint8_t subiendo = 0; //0 subiendo
 uint16_t time_change = 200; //cada 1s
 uint16_t duty_step = 60; // 1%
@@ -48,38 +47,42 @@ uint16_t duty_step = 60; // 1%
 void I2C1_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_1);
-    Control_SuperTwisting(&motor_control_1);
+
     
     LED4_Toggle();
 }
 
-void I2C2_callback(uintptr_t context)
-{
-    AS5600_UpdateData(&sensor_3);
-    Control_SuperTwisting(&motor_control_3);
-    //Control_SendData();
-}
-void I2C4_callback(uintptr_t context)
-{
-    AS5600_UpdateData(&sensor_2);
-    Control_SuperTwisting(&motor_control_2);
-    //Control_SendData(motor_control_2);
-    
-}
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
     LED5_Toggle();
     AS5600_ReadStatusPosition(&sensor_1,1);
-    AS5600_ReadStatusPosition(&sensor_2,4);
-    AS5600_ReadStatusPosition(&sensor_3,2);
-    //I2C2_Write(AS5600_SLAVE_ADDRESS,&i2c_data2[0],2);
     
-    counter++;
-    if(counter >= 200)
+    
+    counter_send++;
+    if (counter_send > 10)
     {
-        counter =0;
-        Control_SendData();
+        counter_send = 0;
+        
+        counter++;
+        counter_change++;
+        pwm_duty = 50*(sin(periods[idx]*counter+4.712389)+1);
+        pwm_duty_period = abs(pwm_duty)*(DUTY_MAX_PERIOD-1)/100;
+        MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
+        MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,pwm_duty_period);
+        
+        AS5600_UpdateSerialData();
     }
+        
+    if (counter_change >= 2500)
+    {
+        if (idx < 3)
+        {
+            idx++;
+        }
+
+        counter_change=0;
+    }
+        
   
 }
 
@@ -96,37 +99,13 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_1.magnet_error =0;
     sensor_1.variable_readed = NOTING_READED;
     
-    sensor_2.position = 0.0;
-    sensor_2.old_position = 0.0;
-    sensor_2.turns = 0;
-    sensor_2.displacement = 0.0;
-    sensor_2.speed = 0.0;
-    sensor_2.direction = 0;
-    sensor_2.magnet_error =0;
-    sensor_2.variable_readed = NOTING_READED;
-    
-    sensor_3.position = 0.0;
-    sensor_3.old_position = 0.0;
-    sensor_3.turns = 0;
-    sensor_3.displacement = 0.0;
-    sensor_3.speed = 0.0;
-    sensor_3.direction = 0;
-    sensor_3.magnet_error =0;
-    sensor_3.variable_readed = NOTING_READED;
-    //AS5600_UpdateDirection(sensor_1.direction); //Update the direction of the motor
-    
-    Control_initialize(&motor_control_1,&sensor_1,1, 500, 0.9, 2);
-    Control_initialize(&motor_control_2,&sensor_2,2, 400, 0.7, 2);
-    Control_initialize(&motor_control_3,&sensor_3,3, 400, 0.7, 2);
+
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
-    I2C2_CallbackRegister(&I2C2_callback,0); 
-    I2C4_CallbackRegister(&I2C4_callback,0);
     TMR1_CallbackRegister(&Timer1_callback,0);  
     
     AS5600_ReadPosition(&sensor_1);
-    //AS5600_ReadPosition(&sensor_2);
-    //AS5600_ReadPosition(&sensor_3);
+
     
 }
 void AS5600_UpdateData(as5600_sensor *sensor)
@@ -150,12 +129,12 @@ void AS5600_UpdateData(as5600_sensor *sensor)
             sensor->position = (float)(((((uint16_t)sensor->i2c_data_received[1]) <<8) | sensor->i2c_data_received[2])*TURN_DEGREES) / (AS5600_RESOLUTION);
             
             //check for complete turn and calculate speed
-            if ((sensor->position - sensor->old_position) < -0.5) //clockwise return to 0 to add a turn 
+            if (sensor->position < 5 && sensor->old_position > 355) //clockwise return to 0 to add a turn 
             {
                 sensor->turns += 1;
                 sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
             }
-            else if ((sensor->position - sensor->old_position) > 0.5) //counterclockwise return to 1 to add a turn 
+            else if (sensor->position > 355  && sensor->old_position < 5) //counterclockwise return to 1 to add a turn 
             {
                 sensor->turns -= 1;
                 sensor->speed = (-1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
@@ -164,8 +143,9 @@ void AS5600_UpdateData(as5600_sensor *sensor)
             {
                 sensor->speed = (sensor->position - sensor->old_position)*SPEED_CONSTANT; //speed on RPM
             }
-            sensor->displacement = sensor->turns + sensor->position;
-                        
+            sensor->displacement = sensor->turns + sensor->position/360;
+            sensor->angle = sensor->turns*360 + sensor->position;
+                      
             //Magnet error check
             if ( ((sensor->i2c_data_received[0] >> 3 & 0x01) == 1)  || ((sensor->i2c_data_received[0] >> 4 & 0x01) == 1) || ((sensor->i2c_data_received[0] >> 5 & 0x01) == 0))
             {
@@ -198,13 +178,13 @@ void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) //Read po
             I2C1_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;
         case 2:
-            I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
+            //I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;    
         case 3:
             //I2C3_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;   
         case 4:
-            I2C4_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
+            //I2C4_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;   
     }
     sensor->variable_readed = STATUS_POSITION;
@@ -220,6 +200,35 @@ void AS5600_ReadPosition(as5600_sensor *sensor) //Read position variable of the 
 
 void AS5600_UpdateSerialData (void)
 {
+    //Position of the motor 1
+    uart_sent_data[0] = (int32_t)(sensor_1.position*100) >>24;
+    uart_sent_data[1] = (int32_t)(sensor_1.position*100) >>16;
+    uart_sent_data[2] = (int32_t)(sensor_1.position*100) >>8;
+    uart_sent_data[3] = (int32_t)(sensor_1.position*100);
+    
+    //Total position angle
+    uart_sent_data[4] = (int32_t)(sensor_1.angle*100) >>24;
+    uart_sent_data[5] = (int32_t)(sensor_1.angle*100) >>16;
+    uart_sent_data[6] = (int32_t)(sensor_1.angle*100) >>8;
+    uart_sent_data[7] = (int32_t)(sensor_1.angle*100);
+    
+    uart_sent_data[8]  = (int32_t)(idx*100) >>24;
+    uart_sent_data[9]  = (int32_t)(idx*100) >>16;
+    uart_sent_data[10] = (int32_t)(idx*100) >>8;
+    uart_sent_data[11] = (int32_t)(idx*100);
+    
+    uart_sent_data[12]  = (int32_t)(pwm_duty*100) >>24;
+    uart_sent_data[13]  = (int32_t)(pwm_duty*100) >>16;
+    uart_sent_data[14] = (int32_t)(pwm_duty*100) >>8;
+    uart_sent_data[15] = (int32_t)(pwm_duty*100);
+    UART2_Write(&uart_sent_data[0],16);
+    
+    //Duty Output
+    /*uart_sent_data[12]  = (int32_t)(sensor_1.pwm_output*100) >>24;
+    uart_sent_data[13]  = (int32_t)(sensor_1.pwm_output*100) >>16;
+    uart_sent_data[14]  = (int32_t)(sensor_1.pwm_output*100) >>8;
+    uart_sent_data[15]  = (int32_t)(sensor_1.pwm_output*100);*/
+    
     /*uart_sent_data[0] = sensor_1.direction;
     uart_sent_data[1] = (uint8_t)(sensor_1.position*100);
     uart_sent_data[2] = (uint8_t)(sensor_1.turns >> 8);

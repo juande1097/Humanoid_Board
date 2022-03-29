@@ -3,14 +3,13 @@
 
 
 extern as5600_sensor sensor_1;
-extern as5600_sensor sensor_2;
 
-extern STA_data motor_control_1;
-extern STA_data motor_control_2;
-extern STA_data motor_control_3;
+
+//extern STA_data motor_control_1;
+
 //control_data control;
 uint8_t Data_Read_U2[6] = {0};
-static uint8_t uart_sent_data[48] = {0};
+//static uint8_t uart_sent_data[48] = {0};
 
 //static PID_data PID_actual_data;
 //static STA_data SMC_ST_data;
@@ -19,9 +18,9 @@ static uint8_t uart_sent_data[48] = {0};
 
 void UART2_callback(uintptr_t context)
 {
-    motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
-    motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
-    motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
+    //motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
+    //motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
+    //motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
     
     //PID_actual_data.prev_error = 0;
     //PID_actual_data.deriv_error = 0;
@@ -214,7 +213,7 @@ int Control_Sign(float data)
 void Control_SendData()
 {
     //Position of the motor 1
-    uart_sent_data[0] = (int32_t)(*motor_control_1.position*100) >>24;
+    /*uart_sent_data[0] = (int32_t)(*motor_control_1.position*100) >>24;
     uart_sent_data[1] = (int32_t)(*motor_control_1.position*100) >>16;
     uart_sent_data[2] = (int32_t)(*motor_control_1.position*100) >>8;
     uart_sent_data[3] = (int32_t)(*motor_control_1.position*100);
@@ -277,7 +276,7 @@ void Control_SendData()
     uart_sent_data[47]  = (int32_t)(motor_control_3.pwm_output*100);
     
 
-    UART2_Write(&uart_sent_data[0],48);
+    UART2_Write(&uart_sent_data[0],48);*/
 }
 
 /*uint8_t uart_sent_data[15] = {0};
