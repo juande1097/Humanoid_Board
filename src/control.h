@@ -25,6 +25,7 @@
 #include "AS5600.h"
 #include "config/default/peripheral/mcpwm/plib_mcpwm.h"
 #include "config/default/peripheral/mcpwm/plib_mcpwm_common.h"
+#include "config/default/peripheral/gpio/plib_gpio.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus

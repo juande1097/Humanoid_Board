@@ -32,16 +32,17 @@ as5600_sensor sensor_1;
 uint8_t uart_sent_data[20] = {0};
 
 
-uint16_t pwm_duty = 0; //max 6000 %45 2700, 
+float pwm_duty = 0; //max 6000 %45 2700, 
 uint16_t pwm_duty_period = 0;
 uint32_t counter = 0;
 uint16_t counter_send = 0;
 uint16_t counter_change = 0;
 uint32_t idx = 0;
-float periods[4]={0.01,0.005,0.0075,0};
+float periods[4]={0.04,0.06,0.1,0};
 uint8_t subiendo = 0; //0 subiendo
 uint16_t time_change = 200; //cada 1s
 uint16_t duty_step = 60; // 1%
+uint8_t button_status = 1;
 
 /**********Peripheral call backs **********/
 void I2C1_callback(uintptr_t context)
@@ -58,32 +59,41 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
     AS5600_ReadStatusPosition(&sensor_1,1);
     
     
-    counter_send++;
-    if (counter_send > 10)
+    if (BTN4_Get() == 0)
     {
-        counter_send = 0;
-        
-        counter++;
-        counter_change++;
-        pwm_duty = 50*(sin(periods[idx]*counter+4.712389)+1);
-        pwm_duty_period = abs(pwm_duty)*(DUTY_MAX_PERIOD-1)/100;
-        MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
-        MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,pwm_duty_period);
-        
-        AS5600_UpdateSerialData();
+        button_status = 0;
     }
-        
-    if (counter_change >= 2500)
-    {
-        if (idx < 3)
+    
+    
+        counter_send++;
+        if (counter_send > 10)
         {
-            idx++;
+            counter_send = 0;
+
+            
+            if (button_status == 0)
+            {
+                counter++;
+                counter_change++;
+                pwm_duty = 50*(sin(periods[idx]*counter+4.712389)+1);
+                pwm_duty_period = abs(pwm_duty)*(DUTY_MAX_PERIOD-1)/100;
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
+                MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,pwm_duty_period);
+            }
+            AS5600_UpdateSerialData();
         }
 
-        counter_change=0;
-    }
+        if (counter_change >= 314)
+        {
+            if (idx < 3)
+            {
+                idx++;
+            }
+
+            counter_change=0;
+        }
         
-  
+    
 }
 
 
@@ -212,10 +222,10 @@ void AS5600_UpdateSerialData (void)
     uart_sent_data[6] = (int32_t)(sensor_1.angle*100) >>8;
     uart_sent_data[7] = (int32_t)(sensor_1.angle*100);
     
-    uart_sent_data[8]  = (int32_t)(idx*100) >>24;
-    uart_sent_data[9]  = (int32_t)(idx*100) >>16;
-    uart_sent_data[10] = (int32_t)(idx*100) >>8;
-    uart_sent_data[11] = (int32_t)(idx*100);
+    uart_sent_data[8]  = (int32_t)(periods[idx]*100) >>24;
+    uart_sent_data[9]  = (int32_t)(periods[idx]*100) >>16;
+    uart_sent_data[10] = (int32_t)(periods[idx]*100) >>8;
+    uart_sent_data[11] = (int32_t)(periods[idx]*100);
     
     uart_sent_data[12]  = (int32_t)(pwm_duty*100) >>24;
     uart_sent_data[13]  = (int32_t)(pwm_duty*100) >>16;

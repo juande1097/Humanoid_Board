@@ -98,6 +98,15 @@
 #define LED5_Get()               ((PORTD >> 13) & 0x1)
 #define LED5_PIN                  GPIO_PIN_RD13
 
+/*** Macros for BTN4 pin ***/
+#define BTN4_Set()               (LATCSET = (1<<9))
+#define BTN4_Clear()             (LATCCLR = (1<<9))
+#define BTN4_Toggle()            (LATCINV= (1<<9))
+#define BTN4_OutputEnable()      (TRISCCLR = (1<<9))
+#define BTN4_InputEnable()       (TRISCSET = (1<<9))
+#define BTN4_Get()               ((PORTC >> 9) & 0x1)
+#define BTN4_PIN                  GPIO_PIN_RC9
+
 
 // *****************************************************************************
 /* GPIO Port

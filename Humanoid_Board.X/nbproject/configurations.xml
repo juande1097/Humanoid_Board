@@ -20,6 +20,8 @@
               <logicalFolder name="f1" displayName="master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c1_master.h</itemPath>
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c_master_common.h</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.h</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c4_master.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f7" displayName="mcpwm" projectFiles="true">
@@ -71,6 +73,8 @@
             <logicalFolder name="f5" displayName="i2c" projectFiles="true">
               <logicalFolder name="f1" displayName="master" projectFiles="true">
                 <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c1_master.c</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c2_master.c</itemPath>
+                <itemPath>../src/config/default/peripheral/i2c/master/plib_i2c4_master.c</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f7" displayName="mcpwm" projectFiles="true">
