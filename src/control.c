@@ -10,7 +10,7 @@ extern STA_data motor_control_2;
 extern STA_data motor_control_3;
 //control_data control;
 uint8_t Data_Read_U2[6] = {0};
-static uint8_t uart_sent_data[48] = {0};
+static uint8_t uart_sent_data[49] = {0};
 
 //static PID_data PID_actual_data;
 //static STA_data SMC_ST_data;
@@ -272,7 +272,7 @@ void Control_SendData()
     uart_sent_data[43]  = (int32_t)(motor_control_3.error*100);
     //Duty Output
     uart_sent_data[44]  = (int32_t)(motor_control_3.pwm_output*100) >>24;
-    uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>16;
+    uart_sent_data[45]  = (int32_t)(motor_control_3.pwm_output*100) >>16;
     uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>8;
     uart_sent_data[47]  = (int32_t)(motor_control_3.pwm_output*100);
     
