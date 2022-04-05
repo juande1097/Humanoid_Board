@@ -68,6 +68,55 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_17_DIR}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: Out}
+  - type: String
+    attributes: {id: BSP_PIN_17_FUNCTION_NAME}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: AS5048_CS_1}
+  - type: String
+    attributes: {id: BSP_PIN_17_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: GPIO}
+  - type: String
+    attributes: {id: BSP_PIN_17_LAT}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: High}
+  - type: String
+    attributes: {id: BSP_PIN_17_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_26_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: SS1 (out)}
+  - type: String
+    attributes: {id: BSP_PIN_26_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
     attributes: {id: BSP_PIN_39_DIR}
     children:
     - type: Values
@@ -208,6 +257,34 @@ children:
       - type: User
         attributes: {value: DIGITAL}
   - type: String
+    attributes: {id: BSP_PIN_66_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: SDO1}
+  - type: String
+    attributes: {id: BSP_PIN_66_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_67_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: SDI1}
+  - type: String
+    attributes: {id: BSP_PIN_67_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
     attributes: {id: BSP_PIN_68_DIR}
     children:
     - type: Values
@@ -251,6 +328,20 @@ children:
         attributes: {value: DIGITAL}
   - type: String
     attributes: {id: BSP_PIN_70_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIGITAL}
+  - type: String
+    attributes: {id: BSP_PIN_72_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: SCK1}
+  - type: String
+    attributes: {id: BSP_PIN_72_MODE}
     children:
     - type: Values
       children:
@@ -676,6 +767,62 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: I2C4_MASTER_InterruptHandler}
+  - type: Boolean
+    attributes: {id: EVIC_35_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: Boolean
+    attributes: {id: EVIC_35_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: Boolean
+    attributes: {id: EVIC_36_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: EVIC_36_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: EVIC_36_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: SPI1_RX_InterruptHandler}
+  - type: Boolean
+    attributes: {id: EVIC_37_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: EVIC_37_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: EVIC_37_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: SPI1_TX_InterruptHandler}
   - type: Boolean
     attributes: {id: EVIC_41_ENABLE}
     children:
@@ -1396,7 +1543,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '4077141821'}
+        attributes: {id: core, value: '4077141565'}
   - type: Hex
     attributes: {id: PMD6_REG_VALUE}
     children:
@@ -1411,13 +1558,104 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '0'}
+  - type: Boolean
+    attributes: {id: SPI1_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'true'}
+  - type: Integer
+    attributes: {id: SPI1_CLOCK_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '60000000'}
+  - type: Boolean
+    attributes: {id: SPI1_FAULT_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'false'}
+  - type: Boolean
+    attributes: {id: SPI1_FAULT_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: SPI1_FAULT_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'false'}
+  - type: Boolean
+    attributes: {id: SPI1_RX_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'true'}
+  - type: Boolean
+    attributes: {id: SPI1_RX_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: String
+    attributes: {id: SPI1_RX_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: SPI1_RX_InterruptHandler}
+  - type: Boolean
+    attributes: {id: SPI1_RX_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'true'}
+  - type: Boolean
+    attributes: {id: SPI1_TX_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'true'}
+  - type: Boolean
+    attributes: {id: SPI1_TX_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: String
+    attributes: {id: SPI1_TX_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: SPI1_TX_InterruptHandler}
+  - type: Boolean
+    attributes: {id: SPI1_TX_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: 'true'}
   - type: Hex
     attributes: {id: SYS_PORT_A_ANSEL}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '256'}
+        attributes: {id: core, value: '49408'}
   - type: Hex
     attributes: {id: SYS_PORT_A_CNPU}
     children:
@@ -1438,7 +1676,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '512'}
+        attributes: {id: core, value: '644'}
   - type: Hex
     attributes: {id: SYS_PORT_B_CNPU}
     children:
@@ -1487,14 +1725,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '448'}
+        attributes: {id: core, value: '1472'}
+  - type: Hex
+    attributes: {id: SYS_PORT_G_LAT}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '1024'}
   - type: Hex
     attributes: {id: SYS_PORT_G_TRIS}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '0'}
+        attributes: {id: core, value: '1024'}
   - type: Combo
     attributes: {id: SYS_PORT_PPS_INPUT_FUNCTION_0}
     children:
@@ -1508,6 +1753,19 @@ children:
       children:
       - type: User
         attributes: {value: U2RX}
+  - type: Combo
+    attributes: {id: SYS_PORT_PPS_INPUT_FUNCTION_1}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: SDI1}
   - type: KeyValueSet
     attributes: {id: SYS_PORT_PPS_INPUT_PIN_0}
     children:
@@ -1522,6 +1780,19 @@ children:
       - type: User
         attributes: {value: '25'}
   - type: KeyValueSet
+    attributes: {id: SYS_PORT_PPS_INPUT_PIN_1}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '12'}
+  - type: KeyValueSet
     attributes: {id: SYS_PORT_PPS_OUTPUT_FUNCTION_0}
     children:
     - type: Attributes
@@ -1534,6 +1805,32 @@ children:
       children:
       - type: User
         attributes: {value: '52'}
+  - type: KeyValueSet
+    attributes: {id: SYS_PORT_PPS_OUTPUT_FUNCTION_1}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '61'}
+  - type: KeyValueSet
+    attributes: {id: SYS_PORT_PPS_OUTPUT_FUNCTION_2}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '57'}
   - type: Combo
     attributes: {id: SYS_PORT_PPS_OUTPUT_PIN_0}
     children:
@@ -1547,6 +1844,32 @@ children:
       children:
       - type: User
         attributes: {value: RPB9}
+  - type: Combo
+    attributes: {id: SYS_PORT_PPS_OUTPUT_PIN_1}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: RPA14}
+  - type: Combo
+    attributes: {id: SYS_PORT_PPS_OUTPUT_PIN_2}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: RPB2}
   - type: Boolean
     attributes: {id: TIMER_1_INTERRUPT_ENABLE}
     children:
@@ -1695,7 +2018,28 @@ children:
       - type: User
         attributes: {value: 'true'}
   - type: Boolean
+    attributes: {id: USE_PPS_INPUT_1}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
     attributes: {id: USE_PPS_OUTPUT_0}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: USE_PPS_OUTPUT_1}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+  - type: Boolean
+    attributes: {id: USE_PPS_OUTPUT_2}
     children:
     - type: Values
       children:

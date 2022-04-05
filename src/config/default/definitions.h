@@ -57,6 +57,7 @@
 #include "peripheral/evic/plib_evic.h"
 #include "peripheral/mcpwm/plib_mcpwm.h"
 #include "peripheral/tmr1/plib_tmr1.h"
+#include "peripheral/spi/spi_master/plib_spi1_master.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

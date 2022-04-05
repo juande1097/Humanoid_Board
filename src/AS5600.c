@@ -22,14 +22,13 @@
 /* ************************************************************************** */
 
 #include "AS5600.h"
-#include "config/default/peripheral/mcpwm/plib_mcpwm.h"
-#include "config/default/peripheral/mcpwm/plib_mcpwm_common.h"
 #include "control.h"
 
 
 as5600_sensor sensor_1;
 as5600_sensor sensor_2;
 as5600_sensor sensor_3;
+as5048a_sensor sensor_4;
 
 STA_data motor_control_1;
 STA_data motor_control_2;
@@ -66,19 +65,28 @@ void I2C4_callback(uintptr_t context)
     //Control_SendData(motor_control_2);
     
 }
+void SPI1_callback(uintptr_t context)
+{
+    AS5048_CS_1_Set();
+    AS5048A_UpdateData(&sensor_4);
+}
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
-    LED5_Toggle();
+    //LED5_Toggle();
     AS5600_ReadStatusPosition(&sensor_1,1);
     AS5600_ReadStatusPosition(&sensor_2,4);
     AS5600_ReadStatusPosition(&sensor_3,2);
-    //I2C2_Write(AS5600_SLAVE_ADDRESS,&i2c_data2[0],2);
+    AS5048A_ReadPosition(&sensor_4);
+    
     
     counter++;
     if(counter >= 200)
     {
         counter =0;
-        Control_SendData();
+        //Control_SendData();
+        
+        AS5048A_UpdateSerialData();
+        
     }
   
 }
@@ -123,6 +131,7 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     I2C2_CallbackRegister(&I2C2_callback,0); 
     I2C4_CallbackRegister(&I2C4_callback,0);
     TMR1_CallbackRegister(&Timer1_callback,0);  
+    SPI1_CallbackRegister(&SPI1_callback,0);
     
     AS5600_ReadPosition(&sensor_1);
     //AS5600_ReadPosition(&sensor_2);
@@ -218,6 +227,72 @@ void AS5600_ReadPosition(as5600_sensor *sensor) //Read position variable of the 
     
 }
 
+void AS5048A_UpdateData(as5048a_sensor *sensor)
+{
+    
+    switch (sensor->variable_readed)
+    {
+        case NOTING_READED:
+        
+        break;
+        
+        case POSITION:
+            //sensor->position = (float)((sensor->spi_data_received[1]*TURN_DEGREES)) / (AS5048a_RESOLUTION);
+            //sensor->variable_readed = NOTING_READED;
+            
+        
+        break;
+        
+        case CLEARFLAG_POSITION:
+            sensor->old_position =  sensor->position;
+            sensor->position = (float)(((sensor->spi_data_received[3]&0x3FFF)*TURN_DEGREES)) / (AS5048a_RESOLUTION);
+
+            //check for complete turn and calculate speed
+            if ((sensor->position - sensor->old_position) < -0.5) //clockwise return to 0 to add a turn 
+            {
+                sensor->turns += 1;
+                sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+            }
+            else if ((sensor->position - sensor->old_position) > 0.5) //counterclockwise return to 1 to add a turn 
+            {
+                sensor->turns -= 1;
+                sensor->speed = (-1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+            }
+            else
+            {
+                sensor->speed = (sensor->position - sensor->old_position)*SPEED_CONSTANT; //speed on RPM
+            }
+            sensor->displacement = sensor->turns + sensor->position;
+                        
+            //Flag Error
+            sensor->flag_error = sensor->spi_data_received[1];
+            
+            sensor->variable_readed = NOTING_READED;
+            
+        break;
+        
+        case CONFIG_OUTPUT_STATUS:
+        
+        break;
+        
+        default:
+                
+        break;        
+    }
+}
+
+void AS5048A_ReadPosition(as5048a_sensor *sensor)
+{
+    uint16_t spi_data_write[4] = {0};
+    spi_data_write[0]=AS5048A_SPI_CMD_READ | AS5048A_CLEA_RERROR_REG;
+    spi_data_write[2]=AS5048A_SPI_CMD_READ | AS5048A_ANGLE_REG;
+    spi_data_write[2] |= getParity(spi_data_write[2]) << 15;
+    //spi_data_write[1] = spi_data_write[0]; 
+    AS5048_CS_1_Clear();
+    SPI1_WriteRead(&spi_data_write[0],8,&sensor->spi_data_received[0],8);
+    sensor->variable_readed = CLEARFLAG_POSITION;
+}
+
 void AS5600_UpdateSerialData (void)
 {
     /*uart_sent_data[0] = sensor_1.direction;
@@ -236,4 +311,23 @@ void AS5600_UpdateSerialData (void)
     uart_sent_data[13] = (uint8_t)((pwm_duty*100)/6000);
     uart_sent_data[14] = ((((float)pwm_duty*100.0)/6000.0) - (uint8_t)((pwm_duty*100)/6000))*100;*/
 }
+void AS5048A_UpdateSerialData (void)
+{
+    uart_sent_data[0] = (int32_t)(sensor_4.position*100) >>24;
+    uart_sent_data[1] = (int32_t)(sensor_4.position*100) >>16;
+    uart_sent_data[2] = (int32_t)(sensor_4.position*100) >>8;
+    uart_sent_data[3] = (int32_t)(sensor_4.position*100);
+    
+    UART2_Write(&uart_sent_data[0],4);
+}
 
+bool getParity(uint16_t data)
+{
+    bool parity = 0;
+    while (data)
+    {
+        parity = !parity;
+        data      = data & (data - 1);
+    }       
+    return parity;
+}

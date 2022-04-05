@@ -6,20 +6,20 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 99DB74296DF9943C474F4F03A700C790
-- generatedChecksum: D8587469326E4EF9183CF51C826A46CD
+- generatedChecksum: 4CF977272707292A31406096E2836403
   logicalPath: config/default
   name: initialization.c
   physicalPath: ''
   security: NON_SECURE
   type: SOURCE
-  userChecksum: F9EDDA4FE9A615427A0C488B3081BB5B
-- generatedChecksum: 4047687A12AEC202B2415ECA9CB60826
+  userChecksum: 55215C3314BC27CE534442A7CA969C07
+- generatedChecksum: C71F63EB970BFF578EF0880677ED2231
   logicalPath: config/default
   name: interrupts.c
   physicalPath: ''
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 4047687A12AEC202B2415ECA9CB60826
+  userChecksum: C71F63EB970BFF578EF0880677ED2231
 - generatedChecksum: null
   logicalPath: ''
   name: main.c
@@ -27,27 +27,27 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: null
-- generatedChecksum: 8D7CBD4E09FFAA584DF054D3F47B413D
+- generatedChecksum: C63045F58D7C4A7B58CF3FC0682ADE7D
   logicalPath: config/default/peripheral/clk
   name: plib_clk.c
   physicalPath: peripheral/clk
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 8D7CBD4E09FFAA584DF054D3F47B413D
-- generatedChecksum: 4F84148027D3E19B09AA7CFAFC19D648
+  userChecksum: C63045F58D7C4A7B58CF3FC0682ADE7D
+- generatedChecksum: 40E58320B69C1B7DC68A9CCE77F4D8B8
   logicalPath: config/default/peripheral/evic
   name: plib_evic.c
   physicalPath: peripheral/evic
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 4F84148027D3E19B09AA7CFAFC19D648
-- generatedChecksum: 82A525C40E1C4356EC112E484C24B55F
+  userChecksum: 40E58320B69C1B7DC68A9CCE77F4D8B8
+- generatedChecksum: EC709B7E68D718AC9A4A26FCC6DC222F
   logicalPath: config/default/peripheral/gpio
   name: plib_gpio.c
   physicalPath: peripheral/gpio
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 82A525C40E1C4356EC112E484C24B55F
+  userChecksum: EC709B7E68D718AC9A4A26FCC6DC222F
 - generatedChecksum: 1944C7E410CAB2DA6C338D1D086CEBB8
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c1_master.c
@@ -76,6 +76,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: B44EBEE4DB3D34AEE01C6540BDC768E8
+- generatedChecksum: 76278F182D15D3D5359C2CE5AFCE7510
+  logicalPath: config/default/peripheral/spi/spi_master
+  name: plib_spi1_master.c
+  physicalPath: peripheral/spi/spi_master
+  security: NON_SECURE
+  type: SOURCE
+  userChecksum: 705C67CF7A00616BC541DCB0E614EAFB
 - generatedChecksum: 176C68E2BE5E85DCA7B88E39D44FDCE1
   logicalPath: config/default/peripheral/tmr1
   name: plib_tmr1.c
@@ -97,13 +104,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 7806B30ECAE0D18D08CD583D8775530D
-- generatedChecksum: 50E7B1CDB0D2784B01A3F6906212F3A2
+- generatedChecksum: BB8270538A2B40E8B7B986CE1D83E7ED
   logicalPath: config/default
   name: definitions.h
   physicalPath: ''
   security: NON_SECURE
   type: HEADER
-  userChecksum: 50E7B1CDB0D2784B01A3F6906212F3A2
+  userChecksum: BB8270538A2B40E8B7B986CE1D83E7ED
 - generatedChecksum: E189C26B2269F8DE46033CCD0621958D
   logicalPath: config/default
   name: device.h
@@ -132,13 +139,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 4D592E1C42727324FE2F5EB681F6C5AA
-- generatedChecksum: 4B0F5948F652CDDD6FED0BFB250F7008
+- generatedChecksum: 3D3BDC647D2158AFD8F8C32E0161DC97
   logicalPath: config/default/peripheral/gpio
   name: plib_gpio.h
   physicalPath: peripheral/gpio
   security: NON_SECURE
   type: HEADER
-  userChecksum: 4B0F5948F652CDDD6FED0BFB250F7008
+  userChecksum: 3D3BDC647D2158AFD8F8C32E0161DC97
 - generatedChecksum: 407D8CE5F0C091BCEBB78967FECBE53E
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c1_master.h
@@ -181,6 +188,20 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 8C0682DB8DD38F7C09771C63347D06FF
+- generatedChecksum: 8B538ED26B7B1F9177E6F490AAE66B57
+  logicalPath: config/default/peripheral/spi/spi_master
+  name: plib_spi1_master.h
+  physicalPath: peripheral/spi/spi_master
+  security: NON_SECURE
+  type: HEADER
+  userChecksum: 8B538ED26B7B1F9177E6F490AAE66B57
+- generatedChecksum: CFA758C8B7258190473EF7C60C4BA4E9
+  logicalPath: config/default/peripheral/spi/spi_master
+  name: plib_spi_master_common.h
+  physicalPath: peripheral/spi/spi_master
+  security: NON_SECURE
+  type: HEADER
+  userChecksum: CFA758C8B7258190473EF7C60C4BA4E9
 - generatedChecksum: 32D7539D9231F3C159ABECE91A0281EA
   logicalPath: config/default/peripheral/tmr1
   name: plib_tmr1.h

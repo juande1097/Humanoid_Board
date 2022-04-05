@@ -31,6 +31,10 @@
 #include "config/default/peripheral/uart/plib_uart2.h"
 #include "config/default/peripheral/uart/plib_uart_common.h"
 #include "config/default/peripheral/gpio/plib_gpio.h"
+#include "config/default/peripheral/mcpwm/plib_mcpwm.h"
+#include "config/default/peripheral/mcpwm/plib_mcpwm_common.h"
+#include "config/default/peripheral/spi/spi_master/plib_spi1_master.h"
+#include "config/default/peripheral/spi/spi_master/plib_spi_master_common.h"
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
@@ -49,7 +53,8 @@ extern "C" {
 #endif
     
     #define AS5600_SLAVE_ADDRESS 0b0110110 
-    #define AS5600_RESOLUTION 4096
+    #define AS5600_RESOLUTION  4096
+    #define AS5048a_RESOLUTION 16384
 
     
     //AS5600 Register Map
@@ -64,6 +69,19 @@ extern "C" {
     #define AS5600_AGC_REG         0x1A
     #define AS5600_MAGNITUDE_REG   0x1B
     #define AS5600_BURN_REG        0xFF
+    
+    ////AS5048A Register Map
+    #define AS5048A_NOP_REG           0x0000
+    #define AS5048A_CLEA_RERROR_REG   0x0001
+    #define AS5048A_PROG_CONTR_REG    0x0003
+    #define AS5048A_ZERO_POS_HI_REG   0x0016
+    #define AS5048A_ZERO_POS_LO_REG   0x0017
+    #define AS5048A_DIAGNOSTICS_REG   0x3FFD
+    #define AS5048A_MAGNITUDE_REG     0x3FFE
+    #define AS5048A_ANGLE_REG         0x3FFF
+    #define AS5048A_SPI_CMD_READ      0x4000
+    #define AS5048A_SPI_CMD_WRITE     0x4000
+
 
     #define SPEED_CONSTANT         1200
     #define TURN_DEGREES           360
@@ -72,7 +90,8 @@ extern "C" {
     
 
 //ENUMs
-enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OUTPUT_STATUS};
+enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OUTPUT_STATUS,CLEARFLAG_POSITION};
+
     
     //Structures    
     typedef struct
@@ -85,8 +104,21 @@ enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OU
         uint16_t                           direction;              // 0 clockwise, 1 counterclockwise
         uint16_t                           magnet_error;          //1 error , 0 good
         uint8_t                            i2c_data_received[20];  //variable were the i2c data readed is storege
-        enum as5600_variable_readed        variable_readed; 
+        enum sensor_variable_readed        variable_readed; 
     }as5600_sensor;
+    
+    typedef struct
+    {
+        float                              position;               //position of the motor in degrees
+        float                              old_position;           //old position of the motor in degrees
+        int16_t                            turns;                  //Motor turns in integers
+        float                              displacement;           //displacement in revolutions 
+        float                              speed;                  //in rpm
+        uint16_t                           direction;              // 0 clockwise, 1 counterclockwise
+        uint16_t                           flag_error;             //
+        uint16_t                           spi_data_received[20];  //variable were the i2c data readed is storege
+        enum sensor_variable_readed        variable_readed; 
+    }as5048a_sensor;
 
     /**********Module Specific Functions**********/
     void AS5600_Initialize(void);                   //Initializes the AD4111
@@ -94,6 +126,10 @@ enum as5600_variable_readed {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OU
     void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) ;           //Read position and status variable of the as5600_sensor 
     void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
     void AS5600_UpdateSerialData (void);
+    void AS5048A_UpdateSerialData (void);
+    void AS5048A_ReadPosition(as5048a_sensor *sensor);
+    void AS5048A_UpdateData(as5048a_sensor *sensor);
+    bool getParity(uint16_t data);
 
     /**********Peripheral call backs**********/
     void I2C1_callback(uintptr_t context);

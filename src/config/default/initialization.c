@@ -188,11 +188,16 @@ void SYS_Initialize ( void* data )
     I2C4_Initialize();
 
 	UART2_Initialize();
-    TMR1_Initialize();
+
     MCPWM_Initialize();
-    AS5600_Initialize();
+    
     //Control_initialize();
 
+    TMR1_Initialize();
+
+	SPI1_Initialize();
+    
+    AS5600_Initialize();
 
 
 

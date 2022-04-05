@@ -62,6 +62,15 @@
 // *****************************************************************************
 
 
+/*** Macros for AS5048_CS_1 pin ***/
+#define AS5048_CS_1_Set()               (LATGSET = (1<<10))
+#define AS5048_CS_1_Clear()             (LATGCLR = (1<<10))
+#define AS5048_CS_1_Toggle()            (LATGINV= (1<<10))
+#define AS5048_CS_1_OutputEnable()      (TRISGCLR = (1<<10))
+#define AS5048_CS_1_InputEnable()       (TRISGSET = (1<<10))
+#define AS5048_CS_1_Get()               ((PORTG >> 10) & 0x1)
+#define AS5048_CS_1_PIN                  GPIO_PIN_RG10
+
 /*** Macros for LED4 pin ***/
 #define LED4_Set()               (LATFSET = (1<<13))
 #define LED4_Clear()             (LATFCLR = (1<<13))
