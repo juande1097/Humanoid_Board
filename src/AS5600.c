@@ -33,6 +33,8 @@ as5048a_sensor sensor_4;
 STA_data motor_control_1;
 STA_data motor_control_2;
 STA_data motor_control_3;
+STA_data motor_control_4;
+
 
 uint8_t uart_sent_data[20] = {0};
 uint8_t i2c_data2[5]={0};
@@ -63,12 +65,14 @@ void I2C4_callback(uintptr_t context)
     AS5600_UpdateData(&sensor_2);
     Control_SuperTwisting(&motor_control_2);
     //Control_SendData(motor_control_2);
+    AS5048A_ReadPosition(&sensor_4);
     
 }
 void SPI1_callback(uintptr_t context)
 {
     AS5048_CS_1_Set();
     AS5048A_UpdateData(&sensor_4);
+    Control_SuperTwisting(&motor_control_4);
 }
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
@@ -76,16 +80,16 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
     AS5600_ReadStatusPosition(&sensor_1,1);
     AS5600_ReadStatusPosition(&sensor_2,4);
     AS5600_ReadStatusPosition(&sensor_3,2);
-    AS5048A_ReadPosition(&sensor_4);
+    
     
     
     counter++;
-    if(counter >= 200)
+    if(counter >= 100)
     {
         counter =0;
-        //Control_SendData();
+        Control_SendData();
         
-        AS5048A_UpdateSerialData();
+        //AS5048A_UpdateSerialData();
         
     }
   
@@ -121,16 +125,26 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_3.direction = 0;
     sensor_3.magnet_error =0;
     sensor_3.variable_readed = NOTING_READED;
-    //AS5600_UpdateDirection(sensor_1.direction); //Update the direction of the motor
+    
+    sensor_4.position = 0.0;
+    sensor_4.old_position = 0.0;
+    sensor_4.turns = 0;
+    sensor_4.displacement = 0.0;
+    sensor_4.speed = 0.0;
+    sensor_4.direction = 0;
+    sensor_4.flag_error =0;
+    sensor_4.variable_readed = NOTING_READED;
+    
     
     Control_initialize(&motor_control_1,&sensor_1,1, 500, 0.9, 2);
     Control_initialize(&motor_control_2,&sensor_2,2, 400, 0.7, 2);
     Control_initialize(&motor_control_3,&sensor_3,3, 400, 0.7, 2);
+    Control_initialize_As5048(&motor_control_4,&sensor_4,4, 400, 0.7, 2);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
     I2C4_CallbackRegister(&I2C4_callback,0);
-    TMR1_CallbackRegister(&Timer1_callback,0);  
+    TMR1_CallbackRegister(&Timer1_callback,0);
     SPI1_CallbackRegister(&SPI1_callback,0);
     
     AS5600_ReadPosition(&sensor_1);

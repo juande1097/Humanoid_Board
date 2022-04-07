@@ -61,7 +61,7 @@ void GPIO_Initialize ( void )
     ANSELACLR = 0xc100; /* Digital Mode Enable */
 
     /* PORTB Initialization */
-    ANSELBCLR = 0x284; /* Digital Mode Enable */
+    ANSELBCLR = 0x280; /* Digital Mode Enable */
 
     /* PORTC Initialization */
 
@@ -96,7 +96,6 @@ void GPIO_Initialize ( void )
     /* PPS Output Remapping */
     RPB9R = 2;
     RPA14R = 3;
-    RPB2R = 3;
 
     /* Lock back the system after PPS configuration */
     CFGCONbits.IOLOCK = 1;

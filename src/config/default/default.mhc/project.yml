@@ -41,34 +41,34 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 40E58320B69C1B7DC68A9CCE77F4D8B8
-- generatedChecksum: EC709B7E68D718AC9A4A26FCC6DC222F
+- generatedChecksum: 51CD9DED94DF52F179F1603EF0E34340
   logicalPath: config/default/peripheral/gpio
   name: plib_gpio.c
   physicalPath: peripheral/gpio
   security: NON_SECURE
   type: SOURCE
-  userChecksum: EC709B7E68D718AC9A4A26FCC6DC222F
-- generatedChecksum: 1944C7E410CAB2DA6C338D1D086CEBB8
+  userChecksum: 51CD9DED94DF52F179F1603EF0E34340
+- generatedChecksum: 7476243E511757AE229C9E4191EDDEC3
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c1_master.c
   physicalPath: peripheral/i2c/master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 1944C7E410CAB2DA6C338D1D086CEBB8
-- generatedChecksum: AD11923779EA226904941536104E7B11
+  userChecksum: 7476243E511757AE229C9E4191EDDEC3
+- generatedChecksum: 9CB8AFC09E91193B2752FA1B42A123F1
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c2_master.c
   physicalPath: peripheral/i2c/master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: AD11923779EA226904941536104E7B11
-- generatedChecksum: F2AC256D59C279B51AA54476CFD60CA1
+  userChecksum: 9CB8AFC09E91193B2752FA1B42A123F1
+- generatedChecksum: 34FDE24C7CE73979EBC8607FD85BD2A1
   logicalPath: config/default/peripheral/i2c/master
   name: plib_i2c4_master.c
   physicalPath: peripheral/i2c/master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: F2AC256D59C279B51AA54476CFD60CA1
+  userChecksum: 34FDE24C7CE73979EBC8607FD85BD2A1
 - generatedChecksum: B44EBEE4DB3D34AEE01C6540BDC768E8
   logicalPath: config/default/peripheral/mcpwm
   name: plib_mcpwm.c
@@ -76,20 +76,20 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: B44EBEE4DB3D34AEE01C6540BDC768E8
-- generatedChecksum: 76278F182D15D3D5359C2CE5AFCE7510
+- generatedChecksum: 971BBAB69CE17915505D223968DEDD67
   logicalPath: config/default/peripheral/spi/spi_master
   name: plib_spi1_master.c
   physicalPath: peripheral/spi/spi_master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 705C67CF7A00616BC541DCB0E614EAFB
-- generatedChecksum: 176C68E2BE5E85DCA7B88E39D44FDCE1
+  userChecksum: 3B74F5450F2F321DDC789D6671377998
+- generatedChecksum: F7A034AF191FFF709AD28A4B2865CA15
   logicalPath: config/default/peripheral/tmr1
   name: plib_tmr1.c
   physicalPath: peripheral/tmr1
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 176C68E2BE5E85DCA7B88E39D44FDCE1
+  userChecksum: F7A034AF191FFF709AD28A4B2865CA15
 - generatedChecksum: 9CD536301EFF4975E48AFAEC26EE0B69
   logicalPath: config/default/peripheral/uart
   name: plib_uart2.c

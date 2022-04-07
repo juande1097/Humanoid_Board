@@ -68,7 +68,7 @@ void I2C4_Initialize(void)
     /* Disable the I2C Bus collision interrupt */
     IEC6CLR = _IEC6_I2C4BIE_MASK;
 
-    I2C4BRG = 55;
+    I2C4BRG = 32;
 
     I2C4CONCLR = _I2C4CON_SIDL_MASK;
     I2C4CONCLR = _I2C4CON_DISSLW_MASK;
