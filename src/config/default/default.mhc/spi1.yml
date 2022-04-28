@@ -25,6 +25,15 @@ children:
       children:
       - type: Dynamic
         attributes: {id: spi1, value: '59'}
+  - type: Comment
+    attributes: {id: SPI_CLOCK_MODE_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '***SPI Mode 1 is Selected***'}
   - type: Hex
     attributes: {id: SPI_DUMMY_DATA}
     children:
@@ -38,6 +47,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: spi1, value: '65535'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_CLK_PH}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
   - type: KeyValueSet
     attributes: {id: SPI_SPICON_MODE}
     children:
@@ -58,6 +74,6 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '0'}
+        attributes: {value: '1'}
 - type: ElementPosition
   attributes: {x: '619', y: '21', id: spi1}

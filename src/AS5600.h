@@ -127,6 +127,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
     void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
     void AS5600_UpdateSerialData (void);
     void AS5048A_UpdateSerialData (void);
+    void AS5048A_ReadStatusPosition(as5048a_sensor *sensor);
     void AS5048A_ReadPosition(as5048a_sensor *sensor);
     void AS5048A_UpdateData(as5048a_sensor *sensor);
     bool getParity(uint16_t data);

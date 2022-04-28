@@ -65,7 +65,7 @@ void I2C4_callback(uintptr_t context)
     AS5600_UpdateData(&sensor_2);
     Control_SuperTwisting(&motor_control_2);
     //Control_SendData(motor_control_2);
-    AS5048A_ReadPosition(&sensor_4);
+    AS5048A_ReadStatusPosition(&sensor_4);
     
 }
 void SPI1_callback(uintptr_t context)
@@ -80,7 +80,7 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
     AS5600_ReadStatusPosition(&sensor_1,1);
     AS5600_ReadStatusPosition(&sensor_2,4);
     AS5600_ReadStatusPosition(&sensor_3,2);
-    
+    //AS5048A_ReadStatusPosition(&sensor_4);
     
     
     counter++;
@@ -136,9 +136,9 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_4.variable_readed = NOTING_READED;
     
     
-    Control_initialize(&motor_control_1,&sensor_1,1, 500, 0.9, 2);
-    Control_initialize(&motor_control_2,&sensor_2,2, 400, 0.7, 2);
-    Control_initialize(&motor_control_3,&sensor_3,3, 400, 0.7, 2);
+    Control_initialize(140,&motor_control_1,&sensor_1,1, 500, 0.9, 2);
+    Control_initialize(50,&motor_control_2,&sensor_2,2, 400, 0.7, 2);
+    Control_initialize(50,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
     Control_initialize_As5048(&motor_control_4,&sensor_4,4, 400, 0.7, 2);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
@@ -251,8 +251,27 @@ void AS5048A_UpdateData(as5048a_sensor *sensor)
         break;
         
         case POSITION:
-            //sensor->position = (float)((sensor->spi_data_received[1]*TURN_DEGREES)) / (AS5048a_RESOLUTION);
-            //sensor->variable_readed = NOTING_READED;
+            sensor->old_position =  sensor->position;
+            sensor->position = (float)(((sensor->spi_data_received[1]&0x3FFF)*TURN_DEGREES)) / (AS5048a_RESOLUTION);
+
+            //check for complete turn and calculate speed
+            if ((sensor->position - sensor->old_position) < -0.5) //clockwise return to 0 to add a turn 
+            {
+                sensor->turns += 1;
+                sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+            }
+            else if ((sensor->position - sensor->old_position) > 0.5) //counterclockwise return to 1 to add a turn 
+            {
+                sensor->turns -= 1;
+                sensor->speed = (-1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+            }
+            else
+            {
+                sensor->speed = (sensor->position - sensor->old_position)*SPEED_CONSTANT; //speed on RPM
+            }
+            sensor->displacement = sensor->turns + sensor->position;
+                        
+            sensor->variable_readed = NOTING_READED;
             
         
         break;
@@ -296,6 +315,17 @@ void AS5048A_UpdateData(as5048a_sensor *sensor)
 }
 
 void AS5048A_ReadPosition(as5048a_sensor *sensor)
+{
+    uint16_t spi_data_write[4] = {0};
+    //spi_data_write[0]=AS5048A_SPI_CMD_READ | AS5048A_CLEA_RERROR_REG;
+    spi_data_write[0]=AS5048A_SPI_CMD_READ | AS5048A_ANGLE_REG;
+    spi_data_write[0] |= getParity(spi_data_write[0]) << 15;
+    spi_data_write[1]= spi_data_write[0];
+    AS5048_CS_1_Clear();
+    SPI1_WriteRead(&spi_data_write[0],6,&sensor->spi_data_received[0],6);
+    sensor->variable_readed = POSITION;
+}
+void AS5048A_ReadStatusPosition(as5048a_sensor *sensor)
 {
     uint16_t spi_data_write[4] = {0};
     spi_data_write[0]=AS5048A_SPI_CMD_READ | AS5048A_CLEA_RERROR_REG;
