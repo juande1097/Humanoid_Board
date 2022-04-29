@@ -2,15 +2,15 @@
 
 
 
-extern as5600_sensor sensor_1;
-extern as5600_sensor sensor_2;
-extern as5600_sensor sensor_3;
-extern as5048a_sensor sensor_4;
+//extern as5600_sensor sensor_1;
+//extern as5600_sensor sensor_2;
+//extern as5600_sensor sensor_3;
+extern as5048a_sensor sensor_1;
 
 extern STA_data motor_control_1;
-extern STA_data motor_control_2;
-extern STA_data motor_control_3;
-extern STA_data motor_control_4;
+//extern STA_data motor_control_2;
+//extern STA_data motor_control_3;
+//extern STA_data motor_control_4;
 //control_data control;
 uint8_t Data_Read_U2[8] = {0};
 static uint8_t uart_sent_data[64] = {0};
@@ -23,9 +23,9 @@ static uint8_t uart_sent_data[64] = {0};
 void UART2_callback(uintptr_t context)
 {
     motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
-    motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
-    motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
-    motor_control_4.ref = (((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7];
+    //motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
+    //motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
+    //motor_control_4.ref = (((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7];
     
     //PID_actual_data.prev_error = 0;
     //PID_actual_data.deriv_error = 0;
@@ -73,7 +73,7 @@ void Control_initialize_As5048(STA_data *SMC_ST_data ,as5048a_sensor *sensor, ui
     
     UART2_ReadCallbackRegister(&UART2_callback,0);
     
-    //UART2_Read(&Data_Read_U2[0],6);
+    UART2_Read(&Data_Read_U2[0],8);
 }
 
 /*void Control_PID(float kp, float ki, float kd)
@@ -260,67 +260,67 @@ void Control_SendData()
     uart_sent_data[15]  = (int32_t)(motor_control_1.pwm_output*100);
     
     //Position of the motor 2
-    uart_sent_data[16] = (int32_t)(*motor_control_2.position*100) >>24;
-    uart_sent_data[17] = (int32_t)(*motor_control_2.position*100) >>16;
-    uart_sent_data[18] = (int32_t)(*motor_control_2.position*100) >>8;
-    uart_sent_data[19] = (int32_t)(*motor_control_2.position*100);
-    //Reference of the motor
-    uart_sent_data[20] = (int32_t)(motor_control_2.ref*100) >>24;
-    uart_sent_data[21] = (int32_t)(motor_control_2.ref*100) >>16;
-    uart_sent_data[22] = (int32_t)(motor_control_2.ref*100) >>8;
-    uart_sent_data[23] = (int32_t)(motor_control_2.ref*100);
-    //Error of the motor
-    uart_sent_data[24]  = (int32_t)(motor_control_2.error*100) >>24;
-    uart_sent_data[25]  = (int32_t)(motor_control_2.error*100) >>16;
-    uart_sent_data[26] = (int32_t)(motor_control_2.error*100) >>8;
-    uart_sent_data[27] = (int32_t)(motor_control_2.error*100);
-    //Duty Output
-    uart_sent_data[28]  = (int32_t)(motor_control_2.pwm_output*100) >>24;
-    uart_sent_data[29]  = (int32_t)(motor_control_2.pwm_output*100) >>16;
-    uart_sent_data[30]  = (int32_t)(motor_control_2.pwm_output*100) >>8;
-    uart_sent_data[31]  = (int32_t)(motor_control_2.pwm_output*100);
-    
-    //Position of the motor 3
-    uart_sent_data[32] = (int32_t)(*motor_control_3.position*100) >>24;
-    uart_sent_data[33] = (int32_t)(*motor_control_3.position*100) >>16;
-    uart_sent_data[34] = (int32_t)(*motor_control_3.position*100) >>8;
-    uart_sent_data[35] = (int32_t)(*motor_control_3.position*100);
-    //Reference of the motor
-    uart_sent_data[36] = (int32_t)(motor_control_3.ref*100) >>24;
-    uart_sent_data[37] = (int32_t)(motor_control_3.ref*100) >>16;
-    uart_sent_data[38] = (int32_t)(motor_control_3.ref*100) >>8;
-    uart_sent_data[39] = (int32_t)(motor_control_3.ref*100);
-    //Error of the motor
-    uart_sent_data[40]  = (int32_t)(motor_control_3.error*100) >>24;
-    uart_sent_data[41]  = (int32_t)(motor_control_3.error*100) >>16;
-    uart_sent_data[42]  = (int32_t)(motor_control_3.error*100) >>8;
-    uart_sent_data[43]  = (int32_t)(motor_control_3.error*100);
-    //Duty Output
-    uart_sent_data[44]  = (int32_t)(motor_control_3.pwm_output*100) >>24;
-    uart_sent_data[45]  = (int32_t)(motor_control_3.pwm_output*100) >>16;
-    uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>8;
-    uart_sent_data[47]  = (int32_t)(motor_control_3.pwm_output*100);
+//    uart_sent_data[16] = (int32_t)(*motor_control_2.position*100) >>24;
+//    uart_sent_data[17] = (int32_t)(*motor_control_2.position*100) >>16;
+//    uart_sent_data[18] = (int32_t)(*motor_control_2.position*100) >>8;
+//    uart_sent_data[19] = (int32_t)(*motor_control_2.position*100);
+//    //Reference of the motor
+//    uart_sent_data[20] = (int32_t)(motor_control_2.ref*100) >>24;
+//    uart_sent_data[21] = (int32_t)(motor_control_2.ref*100) >>16;
+//    uart_sent_data[22] = (int32_t)(motor_control_2.ref*100) >>8;
+//    uart_sent_data[23] = (int32_t)(motor_control_2.ref*100);
+//    //Error of the motor
+//    uart_sent_data[24]  = (int32_t)(motor_control_2.error*100) >>24;
+//    uart_sent_data[25]  = (int32_t)(motor_control_2.error*100) >>16;
+//    uart_sent_data[26] = (int32_t)(motor_control_2.error*100) >>8;
+//    uart_sent_data[27] = (int32_t)(motor_control_2.error*100);
+//    //Duty Output
+//    uart_sent_data[28]  = (int32_t)(motor_control_2.pwm_output*100) >>24;
+//    uart_sent_data[29]  = (int32_t)(motor_control_2.pwm_output*100) >>16;
+//    uart_sent_data[30]  = (int32_t)(motor_control_2.pwm_output*100) >>8;
+//    uart_sent_data[31]  = (int32_t)(motor_control_2.pwm_output*100);
+//    
+//    //Position of the motor 3
+//    uart_sent_data[32] = (int32_t)(*motor_control_3.position*100) >>24;
+//    uart_sent_data[33] = (int32_t)(*motor_control_3.position*100) >>16;
+//    uart_sent_data[34] = (int32_t)(*motor_control_3.position*100) >>8;
+//    uart_sent_data[35] = (int32_t)(*motor_control_3.position*100);
+//    //Reference of the motor
+//    uart_sent_data[36] = (int32_t)(motor_control_3.ref*100) >>24;
+//    uart_sent_data[37] = (int32_t)(motor_control_3.ref*100) >>16;
+//    uart_sent_data[38] = (int32_t)(motor_control_3.ref*100) >>8;
+//    uart_sent_data[39] = (int32_t)(motor_control_3.ref*100);
+//    //Error of the motor
+//    uart_sent_data[40]  = (int32_t)(motor_control_3.error*100) >>24;
+//    uart_sent_data[41]  = (int32_t)(motor_control_3.error*100) >>16;
+//    uart_sent_data[42]  = (int32_t)(motor_control_3.error*100) >>8;
+//    uart_sent_data[43]  = (int32_t)(motor_control_3.error*100);
+//    //Duty Output
+//    uart_sent_data[44]  = (int32_t)(motor_control_3.pwm_output*100) >>24;
+//    uart_sent_data[45]  = (int32_t)(motor_control_3.pwm_output*100) >>16;
+//    uart_sent_data[46]  = (int32_t)(motor_control_3.pwm_output*100) >>8;
+//    uart_sent_data[47]  = (int32_t)(motor_control_3.pwm_output*100);
     
     //Position of the motor 4
-    uart_sent_data[48] = (int32_t)(*motor_control_4.position*100) >>24;
-    uart_sent_data[49] = (int32_t)(*motor_control_4.position*100) >>16;
-    uart_sent_data[50] = (int32_t)(*motor_control_4.position*100) >>8;
-    uart_sent_data[51] = (int32_t)(*motor_control_4.position*100);
-    //Reference of the motor
-    uart_sent_data[52] = (int32_t)(motor_control_4.ref*100) >>24;
-    uart_sent_data[53] = (int32_t)(motor_control_4.ref*100) >>16;
-    uart_sent_data[54] = (int32_t)(motor_control_4.ref*100) >>8;
-    uart_sent_data[55] = (int32_t)(motor_control_4.ref*100);
-    //Error of the motor
-    uart_sent_data[56]  = (int32_t)(motor_control_4.error*100) >>24;
-    uart_sent_data[57]  = (int32_t)(motor_control_4.error*100) >>16;
-    uart_sent_data[58]  = (int32_t)(motor_control_4.error*100) >>8;
-    uart_sent_data[59]  = (int32_t)(motor_control_4.error*100);
-    //Duty Output
-    uart_sent_data[60]  = (int32_t)(motor_control_4.pwm_output*100) >>24;
-    uart_sent_data[61]  = (int32_t)(motor_control_4.pwm_output*100) >>16;
-    uart_sent_data[62]  = (int32_t)(motor_control_4.pwm_output*100) >>8;
-    uart_sent_data[63]  = (int32_t)(motor_control_4.pwm_output*100);
+//    uart_sent_data[48] = (int32_t)(*motor_control_4.position*100) >>24;
+//    uart_sent_data[49] = (int32_t)(*motor_control_4.position*100) >>16;
+//    uart_sent_data[50] = (int32_t)(*motor_control_4.position*100) >>8;
+//    uart_sent_data[51] = (int32_t)(*motor_control_4.position*100);
+//    //Reference of the motor
+//    uart_sent_data[52] = (int32_t)(motor_control_4.ref*100) >>24;
+//    uart_sent_data[53] = (int32_t)(motor_control_4.ref*100) >>16;
+//    uart_sent_data[54] = (int32_t)(motor_control_4.ref*100) >>8;
+//    uart_sent_data[55] = (int32_t)(motor_control_4.ref*100);
+//    //Error of the motor
+//    uart_sent_data[56]  = (int32_t)(motor_control_4.error*100) >>24;
+//    uart_sent_data[57]  = (int32_t)(motor_control_4.error*100) >>16;
+//    uart_sent_data[58]  = (int32_t)(motor_control_4.error*100) >>8;
+//    uart_sent_data[59]  = (int32_t)(motor_control_4.error*100);
+//    //Duty Output
+//    uart_sent_data[60]  = (int32_t)(motor_control_4.pwm_output*100) >>24;
+//    uart_sent_data[61]  = (int32_t)(motor_control_4.pwm_output*100) >>16;
+//    uart_sent_data[62]  = (int32_t)(motor_control_4.pwm_output*100) >>8;
+//    uart_sent_data[63]  = (int32_t)(motor_control_4.pwm_output*100);
     
 
     UART2_Write(&uart_sent_data[0],64);
