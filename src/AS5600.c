@@ -36,7 +36,7 @@ STA_data motor_control_1;
 uint8_t uart_sent_data[20] = {0};
 uint8_t i2c_data2[5]={0};
 
-uint16_t pwm_duty = 3000; //max 6000 %45 2700, 
+float pwm_duty_2 = 0; //max 6000 %45 2700, 
 uint32_t counter = 0;
 uint16_t counter_send = 0;
 uint16_t counter_change = 0;
@@ -47,6 +47,7 @@ uint16_t time_change = 200; //cada 1s
 uint16_t duty_step = 60; // 1%
 uint8_t button_status = 1;
 uint16_t pwm_duty_period = 0;
+uint16_t umbral = 0;
 
 /**********Peripheral call backs **********/
 
@@ -55,7 +56,11 @@ void SPI1_callback(uintptr_t context)
     AS5048_CS_1_Set();
     LED4_Toggle();
     AS5048A_UpdateData(&sensor_1);
+    
+    //Control_StateFeedback(&motor_control_1);
+    //Control_SlidingMode(&motor_control_1);
     Control_SuperTwisting(&motor_control_1);
+    
 }
 
 void Timer1_callback(uint32_t status, uintptr_t context) //1ms
@@ -66,7 +71,16 @@ void Timer1_callback(uint32_t status, uintptr_t context) //1ms
     //AS5600_ReadStatusPosition(&sensor_3,2);
     AS5048A_ReadStatusPosition(&sensor_1);
     
-    //if (BTN4_Get() == 0)
+    counter++;
+    if(counter >= 10)
+    {
+        counter =0;
+        //Control_SendData();
+        AS5048A_UpdateSerialData();
+        
+    }
+    //signal generation for implementation
+    /*if (BTN4_Get() == 0)
     {
         button_status = 0;
     }
@@ -82,12 +96,13 @@ void Timer1_callback(uint32_t status, uintptr_t context) //1ms
             {
                 counter++;
                 counter_change++;
-                pwm_duty = 50*(sin(periods[idx]*counter+4.712389)+1);
-                pwm_duty_period = abs(pwm_duty)*(DUTY_MAX_PERIOD-1)/100;
+                pwm_duty_2 = 50*(sin(periods[idx]*counter+4.712389)+1);
+                pwm_duty_period = abs(pwm_duty_2)*(DUTY_MAX_PERIOD-1)/100;
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,pwm_duty_period);
             }
-            Control_SendData();
+            //Control_SendData();
+            AS5048A_UpdateSerialData();
         }
 
         if (counter_change >= 314)
@@ -98,7 +113,7 @@ void Timer1_callback(uint32_t status, uintptr_t context) //1ms
             }
 
             counter_change=0;
-        }
+        }*/
         
 //    counter++;
 //    if(counter >= 100)
@@ -128,7 +143,10 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     //Control_initialize(50,&motor_control_1,&sensor_1,1, 500, 0.9, 2);
     //Control_initialize(50,&motor_control_2,&sensor_2,2, 400, 0.7, 2);
     //Control_initialize(50,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
-    Control_initialize_As5048(&motor_control_1,&sensor_1,1, 400, 0.7, 2);
+    
+    //Control_initialize_As5048(0.5,&motor_control_1,&sensor_1,1, 10, 0, 0); //state feedback
+    //Control_initialize_As5048(1,&motor_control_1,&sensor_1,1, 50, 0.1, 0); //sliding mode
+    Control_initialize_As5048(0.5,&motor_control_1,&sensor_1,1, 400, 0.7, 2); //super twisting
     
     //I2C1_CallbackRegister(&I2C1_callback,0);  
     //I2C2_CallbackRegister(&I2C2_callback,0); 
@@ -244,16 +262,21 @@ void AS5048A_UpdateData(as5048a_sensor *sensor)
         case POSITION:
             sensor->old_position =  sensor->position;
             sensor->position = (float)(((sensor->spi_data_received[1]&0x3FFF)*TURN_DEGREES)) / (AS5048a_RESOLUTION);
-
+            
+            
             //check for complete turn and calculate speed
-            if ((sensor->position - sensor->old_position) < -0.5) //clockwise return to 0 to add a turn 
+            if ((sensor->position < 5 && sensor->old_position > 355)) //clockwise return to 0 to add a turn 
             {
+                
                 sensor->turns += 1;
                 sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+                    
+                
+                
             }
-            else if ((sensor->position - sensor->old_position) > 0.5) //counterclockwise return to 1 to add a turn 
+            else if ((sensor->position > 355  && sensor->old_position < 5)) //counterclockwise return to 1 to add a turn 
             {
-                sensor->turns -= 1;
+                //sensor->turns -= 1;
                 sensor->speed = (-1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
             }
             else
@@ -270,24 +293,34 @@ void AS5048A_UpdateData(as5048a_sensor *sensor)
         case CLEARFLAG_POSITION:
             sensor->old_position =  sensor->position;
             sensor->position = (float)(((sensor->spi_data_received[3]&0x3FFF)*TURN_DEGREES)) / (AS5048a_RESOLUTION);
+            
+            if (sensor->position > 200 && sensor->position < 300)
+            {
+                umbral = 0;
+            }
 
             //check for complete turn and calculate speed
-            if ((sensor->position - sensor->old_position) < -0.5) //clockwise return to 0 to add a turn 
+            if ((sensor->position < 5 && sensor->position > 0.055 && sensor->old_position > 355)) //clockwise return to 0 to add a turn 
             {
-                sensor->turns += 1;
-                sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+                if (umbral == 0)
+                {
+                    sensor->turns += 1;
+                    sensor->speed = (1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
+                    umbral =1;
+                }    
             }
-            else if ((sensor->position - sensor->old_position) > 0.5) //counterclockwise return to 1 to add a turn 
+            else if ((sensor->position > 355  && sensor->old_position < 5)) //counterclockwise return to 1 to add a turn 
             {
-                sensor->turns -= 1;
+                //sensor->turns -= 1;
                 sensor->speed = (-1- sensor->old_position + sensor->position)*SPEED_CONSTANT;
             }
             else
             {
                 sensor->speed = (sensor->position - sensor->old_position)*SPEED_CONSTANT; //speed on RPM
             }
-            sensor->displacement = sensor->turns + sensor->position;
-                        
+            sensor->displacement = sensor->turns + sensor->position/360;
+            sensor->angle = sensor->turns*360 + sensor->position;
+                
             //Flag Error
             sensor->flag_error = sensor->spi_data_received[1];
             
@@ -348,12 +381,35 @@ void AS5600_UpdateSerialData (void)
 }
 void AS5048A_UpdateSerialData (void)
 {
-//    uart_sent_data[0] = (int32_t)(sensor_4.position*100) >>24;
-//    uart_sent_data[1] = (int32_t)(sensor_4.position*100) >>16;
-//    uart_sent_data[2] = (int32_t)(sensor_4.position*100) >>8;
-//    uart_sent_data[3] = (int32_t)(sensor_4.position*100);
+    //Position of the motor 1
+    uart_sent_data[0] = (int32_t)(sensor_1.position*100) >>24;
+    uart_sent_data[1] = (int32_t)(sensor_1.position*100) >>16;
+    uart_sent_data[2] = (int32_t)(sensor_1.position*100) >>8;
+    uart_sent_data[3] = (int32_t)(sensor_1.position*100);
     
-    UART2_Write(&uart_sent_data[0],4);
+    //Total position angle
+    uart_sent_data[4] = (int32_t)(sensor_1.angle*100) >>24;
+    uart_sent_data[5] = (int32_t)(sensor_1.angle*100) >>16;
+    uart_sent_data[6] = (int32_t)(sensor_1.angle*100) >>8;
+    uart_sent_data[7] = (int32_t)(sensor_1.angle*100);
+    
+    uart_sent_data[8]  = (int32_t)(periods[idx]*100) >>24;
+    uart_sent_data[9]  = (int32_t)(periods[idx]*100) >>16;
+    uart_sent_data[10] = (int32_t)(periods[idx]*100) >>8;
+    uart_sent_data[11] = (int32_t)(periods[idx]*100);
+    
+    uart_sent_data[12]  = (int32_t)(motor_control_1.pwm_output*100) >>24;
+    uart_sent_data[13]  = (int32_t)(motor_control_1.pwm_output*100) >>16;
+    uart_sent_data[14] = (int32_t)(motor_control_1.pwm_output*100) >>8;
+    uart_sent_data[15] = (int32_t)(motor_control_1.pwm_output*100);
+    
+    uart_sent_data[16]  = (int32_t)(motor_control_1.ref*100) >>24;
+    uart_sent_data[17]  = (int32_t)(motor_control_1.ref*100) >>16;
+    uart_sent_data[18] = (int32_t)(motor_control_1.ref*100) >>8;
+    uart_sent_data[19] = (int32_t)(motor_control_1.ref*100);
+    UART2_Write(&uart_sent_data[0],20);
+    
+    //UART2_Write(&uart_sent_data[0],4);
 }
 
 bool getParity(uint16_t data)

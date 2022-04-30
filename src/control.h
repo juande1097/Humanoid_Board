@@ -85,13 +85,15 @@ extern "C" {
     
     /**********Control Specific Functions**********/
     void Control_initialize(uint16_t reference,STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b);
-    void Control_initialize_As5048(STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b);
+    void Control_initialize_As5048(float ref,STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b);
     //void Control_PID(float kp, float ki, float kd);
     void Control_UpdateSpeedAcceleration(void);
     //void Control_UpdateDirection(float pwm_duty);
     void Control_SetDutyPeriod(float pwm_duty);
     void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data);
     void Control_SuperTwisting(STA_data *SMC_ST_data);
+    void Control_StateFeedback(STA_data *SMC_ST_data);
+    void Control_SlidingMode(STA_data *SMC_ST_data);
     void Control_SendData();
     int Control_Sign(float data);
 

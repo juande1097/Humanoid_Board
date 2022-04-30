@@ -54,9 +54,9 @@ void Control_initialize(uint16_t reference,STA_data *SMC_ST_data ,as5600_sensor 
     
     UART2_Read(&Data_Read_U2[0],8);
 }
-void Control_initialize_As5048(STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
+void Control_initialize_As5048(float ref,STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {
-    SMC_ST_data->ref = 50;
+    SMC_ST_data->ref = ref;
     SMC_ST_data->position = &sensor->position;
     SMC_ST_data->period = CONTROL_PERIOD;
     SMC_ST_data->error = 0;
@@ -99,6 +99,40 @@ void Control_initialize_As5048(STA_data *SMC_ST_data ,as5048a_sensor *sensor, ui
     Control_SendData();
     
 }*/
+void Control_StateFeedback(STA_data *SMC_ST_data)
+{
+    SMC_ST_data->error = SMC_ST_data->ref - *SMC_ST_data->position;   
+    SMC_ST_data->pwm_output = SMC_ST_data->const_c1*SMC_ST_data->error;
+    if (SMC_ST_data->pwm_output > 100.0)
+    {
+        SMC_ST_data->pwm_output = 100.0;
+    }
+    if (SMC_ST_data->pwm_output < -100.0)
+    {
+        SMC_ST_data->pwm_output = -100;
+    }
+    Control_SetDutyPeriod_IBT_4(*SMC_ST_data);
+}
+
+void Control_SlidingMode(STA_data *SMC_ST_data)
+{
+    SMC_ST_data->prev_error = SMC_ST_data->error;
+    SMC_ST_data->error = SMC_ST_data->ref - *SMC_ST_data->position;   
+    SMC_ST_data->deriv_error = (SMC_ST_data->error - SMC_ST_data->prev_error)/SMC_ST_data->period;
+    SMC_ST_data->sigma = SMC_ST_data->deriv_error + SMC_ST_data->const_c2*SMC_ST_data->error;
+    SMC_ST_data->pwm_output = (SMC_ST_data->const_c1 *(Control_Sign(SMC_ST_data->sigma)));
+    
+    
+    if (SMC_ST_data->pwm_output > 100.0)
+    {
+        SMC_ST_data->pwm_output = 100.0;
+    }
+    if (SMC_ST_data->pwm_output < -100.0)
+    {
+        SMC_ST_data->pwm_output = -100;
+    }
+    Control_SetDutyPeriod_IBT_4(*SMC_ST_data);
+}
 void Control_SuperTwisting(STA_data *SMC_ST_data)
 {
     SMC_ST_data->prev_error = SMC_ST_data->error;

@@ -98,6 +98,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
     {
         float                              position;               //position of the motor in degrees
         float                              old_position;           //old position of the motor in degrees
+        float                              angle;                  //total angle position
         int16_t                            turns;                  //Motor turns in integers
         float                              displacement;           //displacement in revolutions 
         float                              speed;                  //in rpm
@@ -111,6 +112,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
     {
         float                              position;               //position of the motor in degrees
         float                              old_position;           //old position of the motor in degrees
+        float                              angle;                  //total angle position
         int16_t                            turns;                  //Motor turns in integers
         float                              displacement;           //displacement in revolutions 
         float                              speed;                  //in rpm
