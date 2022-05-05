@@ -54,9 +54,9 @@ void Control_initialize(uint16_t reference,STA_data *SMC_ST_data ,as5600_sensor 
     
     UART2_Read(&Data_Read_U2[0],8);
 }
-void Control_initialize_As5048(STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
+void Control_initialize_As5048(uint16_t reference, STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {
-    SMC_ST_data->ref = 50;
+    SMC_ST_data->ref = reference;
     SMC_ST_data->position = &sensor->position;
     SMC_ST_data->period = CONTROL_PERIOD;
     SMC_ST_data->error = 0;

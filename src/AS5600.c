@@ -136,10 +136,10 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     sensor_4.variable_readed = NOTING_READED;
     
     
-    Control_initialize(140,&motor_control_1,&sensor_1,1, 500, 0.9, 2);
-    Control_initialize(50,&motor_control_2,&sensor_2,2, 400, 0.7, 2);
-    Control_initialize(50,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
-    Control_initialize_As5048(&motor_control_4,&sensor_4,4, 400, 0.7, 2);
+    Control_initialize(163,&motor_control_1,&sensor_1,1, 500, 0.9, 2);
+    Control_initialize(150,&motor_control_2,&sensor_2,2, 400, 0.7, 2); //130-160
+    Control_initialize(140,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
+    Control_initialize_As5048(160,&motor_control_4,&sensor_4,4, 400, 0.7, 2);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
