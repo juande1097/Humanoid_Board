@@ -80,6 +80,24 @@
 #define LED4_Get()               ((PORTF >> 13) & 0x1)
 #define LED4_PIN                  GPIO_PIN_RF13
 
+/*** Macros for AS5048_CS_2 pin ***/
+#define AS5048_CS_2_Set()               (LATESET = (1<<14))
+#define AS5048_CS_2_Clear()             (LATECLR = (1<<14))
+#define AS5048_CS_2_Toggle()            (LATEINV= (1<<14))
+#define AS5048_CS_2_OutputEnable()      (TRISECLR = (1<<14))
+#define AS5048_CS_2_InputEnable()       (TRISESET = (1<<14))
+#define AS5048_CS_2_Get()               ((PORTE >> 14) & 0x1)
+#define AS5048_CS_2_PIN                  GPIO_PIN_RE14
+
+/*** Macros for AS5048_CS_3 pin ***/
+#define AS5048_CS_3_Set()               (LATASET = (1<<4))
+#define AS5048_CS_3_Clear()             (LATACLR = (1<<4))
+#define AS5048_CS_3_Toggle()            (LATAINV= (1<<4))
+#define AS5048_CS_3_OutputEnable()      (TRISACLR = (1<<4))
+#define AS5048_CS_3_InputEnable()       (TRISASET = (1<<4))
+#define AS5048_CS_3_Get()               ((PORTA >> 4) & 0x1)
+#define AS5048_CS_3_PIN                  GPIO_PIN_RA4
+
 /*** Macros for Motor_dir_A pin ***/
 #define Motor_dir_A_Set()               (LATDSET = (1<<8))
 #define Motor_dir_A_Clear()             (LATDCLR = (1<<8))

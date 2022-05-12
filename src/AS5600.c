@@ -29,11 +29,15 @@ as5600_sensor sensor_1;
 as5600_sensor sensor_2;
 as5600_sensor sensor_3;
 as5048a_sensor sensor_4;
+as5048a_sensor sensor_5;
+as5048a_sensor sensor_6;
 
 STA_data motor_control_1;
 STA_data motor_control_2;
 STA_data motor_control_3;
 STA_data motor_control_4;
+STA_data motor_control_5;
+STA_data motor_control_6;
 
 
 uint8_t uart_sent_data[20] = {0};
@@ -65,7 +69,9 @@ void I2C4_callback(uintptr_t context)
     AS5600_UpdateData(&sensor_2);
     Control_SuperTwisting(&motor_control_2);
     //Control_SendData(motor_control_2);
-    AS5048A_ReadStatusPosition(&sensor_4);
+    AS5048A_ReadStatusPosition(&sensor_4,1);
+    AS5048A_ReadStatusPosition(&sensor_5,2);
+    AS5048A_ReadStatusPosition(&sensor_6,3);
     
 }
 void SPI1_callback(uintptr_t context)
@@ -74,13 +80,28 @@ void SPI1_callback(uintptr_t context)
     AS5048A_UpdateData(&sensor_4);
     Control_SuperTwisting(&motor_control_4);
 }
+void SPI3_callback(uintptr_t context)
+{
+    AS5048_CS_2_Set();
+    AS5048A_UpdateData(&sensor_5);
+    Control_SuperTwisting(&motor_control_5);
+}
+void SPI4_callback(uintptr_t context)
+{
+    AS5048_CS_3_Set();
+    AS5048A_UpdateData(&sensor_6);
+    Control_SuperTwisting(&motor_control_6);
+}
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
     //LED5_Toggle();
     AS5600_ReadStatusPosition(&sensor_1,1);
     AS5600_ReadStatusPosition(&sensor_2,4);
     AS5600_ReadStatusPosition(&sensor_3,2);
-    //AS5048A_ReadStatusPosition(&sensor_4);
+//    AS5048A_ReadStatusPosition(&sensor_4,1);
+//    AS5048A_ReadStatusPosition(&sensor_5,2);
+//    AS5048A_ReadStatusPosition(&sensor_4,3);
+    
     
     
     counter++;
@@ -140,16 +161,22 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     Control_initialize(150,&motor_control_2,&sensor_2,2, 400, 0.7, 2); //130-160
     Control_initialize(140,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
     Control_initialize_As5048(160,&motor_control_4,&sensor_4,4, 400, 0.7, 2);
+    Control_initialize_As5048(210,&motor_control_5,&sensor_5,5, 400, 0.7, 2);
+    Control_initialize_As5048(284,&motor_control_6,&sensor_6,6, 400, 0.7, 2);
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
     I2C4_CallbackRegister(&I2C4_callback,0);
     TMR1_CallbackRegister(&Timer1_callback,0);
     SPI1_CallbackRegister(&SPI1_callback,0);
+    SPI3_CallbackRegister(&SPI3_callback,0);
+    SPI4_CallbackRegister(&SPI4_callback,0);
     
     AS5600_ReadPosition(&sensor_1);
     //AS5600_ReadPosition(&sensor_2);
     //AS5600_ReadPosition(&sensor_3);
+    
+
     
 }
 void AS5600_UpdateData(as5600_sensor *sensor)
@@ -325,16 +352,31 @@ void AS5048A_ReadPosition(as5048a_sensor *sensor)
     SPI1_WriteRead(&spi_data_write[0],6,&sensor->spi_data_received[0],6);
     sensor->variable_readed = POSITION;
 }
-void AS5048A_ReadStatusPosition(as5048a_sensor *sensor)
+void AS5048A_ReadStatusPosition(as5048a_sensor *sensor, uint8_t channel)
 {
     uint16_t spi_data_write[4] = {0};
     spi_data_write[0]=AS5048A_SPI_CMD_READ | AS5048A_CLEA_RERROR_REG;
     spi_data_write[2]=AS5048A_SPI_CMD_READ | AS5048A_ANGLE_REG;
     spi_data_write[2] |= getParity(spi_data_write[2]) << 15;
     //spi_data_write[1] = spi_data_write[0]; 
-    AS5048_CS_1_Clear();
-    SPI1_WriteRead(&spi_data_write[0],8,&sensor->spi_data_received[0],8);
-    sensor->variable_readed = CLEARFLAG_POSITION;
+    switch(channel)
+    {
+        case 1:
+            AS5048_CS_1_Clear();
+            SPI1_WriteRead(&spi_data_write[0],8,&sensor->spi_data_received[0],8);
+            sensor->variable_readed = CLEARFLAG_POSITION;
+        break;
+        case 2:
+            AS5048_CS_2_Clear();
+            SPI3_WriteRead(&spi_data_write[0],8,&sensor->spi_data_received[0],8);
+            sensor->variable_readed = CLEARFLAG_POSITION;
+        break;
+        case 3:
+            AS5048_CS_3_Clear();
+            SPI4_WriteRead(&spi_data_write[0],8,&sensor->spi_data_received[0],8);
+            sensor->variable_readed = CLEARFLAG_POSITION;
+        break;
+    }
 }
 
 void AS5600_UpdateSerialData (void)

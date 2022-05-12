@@ -197,6 +197,10 @@ void SYS_Initialize ( void* data )
 
 	SPI1_Initialize();
     
+    SPI3_Initialize();
+    
+    SPI4_Initialize();
+    
     AS5600_Initialize();
 
 

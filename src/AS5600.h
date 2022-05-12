@@ -35,6 +35,8 @@
 #include "config/default/peripheral/mcpwm/plib_mcpwm_common.h"
 #include "config/default/peripheral/spi/spi_master/plib_spi1_master.h"
 #include "config/default/peripheral/spi/spi_master/plib_spi_master_common.h"
+#include "config/default/peripheral/spi/spi_master/plib_spi3_master.h"
+#include "config/default/peripheral/spi/spi_master/plib_spi4_master.h"
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
@@ -127,7 +129,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
     void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
     void AS5600_UpdateSerialData (void);
     void AS5048A_UpdateSerialData (void);
-    void AS5048A_ReadStatusPosition(as5048a_sensor *sensor);
+    void AS5048A_ReadStatusPosition(as5048a_sensor *sensor, uint8_t channel);
     void AS5048A_ReadPosition(as5048a_sensor *sensor);
     void AS5048A_UpdateData(as5048a_sensor *sensor);
     bool getParity(uint16_t data);

@@ -72,6 +72,10 @@ void I2C2_BUS_InterruptHandler( void );
 void I2C2_MASTER_InterruptHandler( void );
 void I2C4_BUS_InterruptHandler( void );
 void I2C4_MASTER_InterruptHandler( void );
+void SPI3_RX_InterruptHandler( void );
+void SPI3_TX_InterruptHandler( void );
+void SPI4_RX_InterruptHandler( void );
+void SPI4_TX_InterruptHandler( void );
 
 
 
@@ -134,6 +138,26 @@ void __ISR(_I2C4_BUS_VECTOR, ipl1SRS) I2C4_BUS_Handler (void)
 void __ISR(_I2C4_MASTER_VECTOR, ipl1SRS) I2C4_MASTER_Handler (void)
 {
     I2C4_MASTER_InterruptHandler();
+}
+
+void __ISR(_SPI3_RX_VECTOR, ipl1SRS) SPI3_RX_Handler (void)
+{
+    SPI3_RX_InterruptHandler();
+}
+
+void __ISR(_SPI3_TX_VECTOR, ipl1SRS) SPI3_TX_Handler (void)
+{
+    SPI3_TX_InterruptHandler();
+}
+
+void __ISR(_SPI4_RX_VECTOR, ipl1SRS) SPI4_RX_Handler (void)
+{
+    SPI4_RX_InterruptHandler();
+}
+
+void __ISR(_SPI4_TX_VECTOR, ipl1SRS) SPI4_TX_Handler (void)
+{
+    SPI4_TX_InterruptHandler();
 }
 
 

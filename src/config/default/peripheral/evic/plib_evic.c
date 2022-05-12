@@ -67,6 +67,10 @@ void EVIC_Initialize( void )
     IPC15SET = 0x400 | 0x0;  /* I2C2_MASTER:  Priority 1 / Subpriority 0 */
     IPC48SET = 0x40000 | 0x0;  /* I2C4_BUS:  Priority 1 / Subpriority 0 */
     IPC49SET = 0x4 | 0x0;  /* I2C4_MASTER:  Priority 1 / Subpriority 0 */
+    IPC54SET = 0x4000000 | 0x0;  /* SPI3_RX:  Priority 1 / Subpriority 0 */
+    IPC55SET = 0x4 | 0x0;  /* SPI3_TX:  Priority 1 / Subpriority 0 */
+    IPC55SET = 0x40000 | 0x0;  /* SPI4_RX:  Priority 1 / Subpriority 0 */
+    IPC55SET = 0x4000000 | 0x0;  /* SPI4_TX:  Priority 1 / Subpriority 0 */
 
 
 

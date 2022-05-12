@@ -54,7 +54,10 @@ int main ( void )
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_8,0);
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_9,0);
     MCPWM_ChannelPrimaryDutySet(MCPWM_CH_11,0);
+    MCPWM_ChannelPrimaryDutySet(MCPWM_CH_12,0);
     MCPWM_Start();
+    
+    
 
     while ( true )
     {

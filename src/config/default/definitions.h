@@ -52,6 +52,8 @@
 #include "peripheral/i2c/master/plib_i2c2_master.h"
 #include "peripheral/i2c/master/plib_i2c4_master.h"
 #include "peripheral/uart/plib_uart2.h"
+#include "peripheral/spi/spi_master/plib_spi4_master.h"
+#include "peripheral/spi/spi_master/plib_spi3_master.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
