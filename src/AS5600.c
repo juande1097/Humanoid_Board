@@ -39,15 +39,12 @@ STA_data motor_control_4;
 STA_data motor_control_5;
 STA_data motor_control_6;
 
+uint8_t humanoid_leg = 1; //0 Right, 1 Left
+uint8_t zpos_send = 0;
+uint8_t counter_z = 0;
 
-uint8_t uart_sent_data[20] = {0};
-uint8_t i2c_data2[5]={0};
-
-uint16_t pwm_duty = 3000; //max 6000 %45 2700, 
 uint16_t counter = 0;
-uint8_t subiendo = 0; //0 subiendo
-uint16_t time_change = 200; //cada 1s
-uint16_t duty_step = 60; // 1%
+
 
 /**********Peripheral call backs **********/
 void I2C1_callback(uintptr_t context)
@@ -62,16 +59,17 @@ void I2C2_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_3);
     Control_SuperTwisting(&motor_control_3);
-    //Control_SendData();
 }
 void I2C4_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_2);
     Control_SuperTwisting(&motor_control_2);
-    //Control_SendData(motor_control_2);
-    AS5048A_ReadStatusPosition(&sensor_4,1);
-    AS5048A_ReadStatusPosition(&sensor_5,2);
-    AS5048A_ReadStatusPosition(&sensor_6,3);
+    
+        AS5048A_ReadStatusPosition(&sensor_4,1);
+        AS5048A_ReadStatusPosition(&sensor_5,2);
+        AS5048A_ReadStatusPosition(&sensor_6,3);
+    
+    
     
 }
 void SPI1_callback(uintptr_t context)
@@ -94,24 +92,15 @@ void SPI4_callback(uintptr_t context)
 }
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
-    //LED5_Toggle();
-    AS5600_ReadStatusPosition(&sensor_1,1);
-    AS5600_ReadStatusPosition(&sensor_2,4);
-    AS5600_ReadStatusPosition(&sensor_3,2);
-//    AS5048A_ReadStatusPosition(&sensor_4,1);
-//    AS5048A_ReadStatusPosition(&sensor_5,2);
-//    AS5048A_ReadStatusPosition(&sensor_4,3);
-    
-    
+        AS5600_ReadPosition(&sensor_1);
+        AS5600_ReadPosition(&sensor_2);
+        AS5600_ReadPosition(&sensor_3);
     
     counter++;
     if(counter >= 100)
     {
         counter =0;
-        Control_SendData();
-        
-        //AS5048A_UpdateSerialData();
-        
+        Control_SendData();    
     }
   
 }
@@ -120,49 +109,33 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 /**********Module Specific Functions**********/
 void AS5600_Initialize(void)        ////Initializes the AD4111
 {
-    sensor_1.position = 0.0;
-    sensor_1.old_position = 0.0;
-    sensor_1.turns = 0;
-    sensor_1.displacement = 0.0;
-    sensor_1.speed = 0.0;
-    sensor_1.direction = 0;
-    sensor_1.magnet_error =0;
-    sensor_1.variable_readed = NOTING_READED;
-    
-    sensor_2.position = 0.0;
-    sensor_2.old_position = 0.0;
-    sensor_2.turns = 0;
-    sensor_2.displacement = 0.0;
-    sensor_2.speed = 0.0;
-    sensor_2.direction = 0;
-    sensor_2.magnet_error =0;
-    sensor_2.variable_readed = NOTING_READED;
-    
-    sensor_3.position = 0.0;
-    sensor_3.old_position = 0.0;
-    sensor_3.turns = 0;
-    sensor_3.displacement = 0.0;
-    sensor_3.speed = 0.0;
-    sensor_3.direction = 0;
-    sensor_3.magnet_error =0;
-    sensor_3.variable_readed = NOTING_READED;
-    
-    sensor_4.position = 0.0;
-    sensor_4.old_position = 0.0;
-    sensor_4.turns = 0;
-    sensor_4.displacement = 0.0;
-    sensor_4.speed = 0.0;
-    sensor_4.direction = 0;
-    sensor_4.flag_error =0;
-    sensor_4.variable_readed = NOTING_READED;
+    if  (humanoid_leg == 0)
+    {
+        AS5600_SensorInit(&sensor_1,1,105);
+        AS5600_SensorInit(&sensor_2,2,105);
+        AS5600_SensorInit(&sensor_3,3,200);
+        AS5048A_SensorInit(&sensor_4,4,192);
+        AS5048A_SensorInit(&sensor_5,5,200);
+        AS5048A_SensorInit(&sensor_6,6,220);
+    }
+    else
+    {
+        AS5600_SensorInit(&sensor_1,1,343);
+        AS5600_SensorInit(&sensor_2,2,342); //330
+        AS5600_SensorInit(&sensor_3,3,312); //320
+        AS5048A_SensorInit(&sensor_4,4,330); //340
+        AS5048A_SensorInit(&sensor_5,5,45); //30
+        AS5048A_SensorInit(&sensor_6,6,99); //104
+    }
+        
     
     
-    Control_initialize(163,&motor_control_1,&sensor_1,1, 500, 0.9, 2);
-    Control_initialize(150,&motor_control_2,&sensor_2,2, 400, 0.7, 2); //130-160
-    Control_initialize(140,&motor_control_3,&sensor_3,3, 400, 0.7, 2);
-    Control_initialize_As5048(160,&motor_control_4,&sensor_4,4, 400, 0.7, 2);
-    Control_initialize_As5048(210,&motor_control_5,&sensor_5,5, 400, 0.7, 2);
-    Control_initialize_As5048(284,&motor_control_6,&sensor_6,6, 400, 0.7, 2);
+    Control_initialize(180,&motor_control_1,&sensor_1,1, 500, 0.9, 2);        //163 //285
+    Control_initialize(180,&motor_control_2,&sensor_2,2, 400, 0.7, 2);        //150 //285
+    Control_initialize(180,&motor_control_3,&sensor_3,3, 400, 0.7, 2);        //140 //11
+    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 400, 0.7, 2); //160 //350
+    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 400, 0.7, 2); //210 //15
+    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 400, 0.7, 2); //284 //50
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
@@ -172,12 +145,42 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     SPI3_CallbackRegister(&SPI3_callback,0);
     SPI4_CallbackRegister(&SPI4_callback,0);
     
-    AS5600_ReadPosition(&sensor_1);
-    //AS5600_ReadPosition(&sensor_2);
-    //AS5600_ReadPosition(&sensor_3);
+
+        AS5600_Write_ZPOS(&sensor_1);
+        AS5600_Write_ZPOS(&sensor_2);
+        AS5600_Write_ZPOS(&sensor_3);
+        AS5048A_WriteZPOS(&sensor_4);
+        AS5048A_WriteZPOS(&sensor_5);
+        AS5048A_WriteZPOS(&sensor_6);
+        
+        
     
 
-    
+}
+void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos)
+{
+    sensor->sensor_number = sensor_num;
+    sensor->zero_position = zero_pos;
+    sensor->position = 0.0;
+    sensor->old_position = 0.0;
+    sensor->turns = 0;
+    sensor->displacement = 0.0;
+    sensor->speed = 0.0;
+    sensor->direction = 0;
+    sensor->magnet_error =0; 
+    sensor->variable_readed = NOTING_READED;
+}
+void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos)
+{
+    sensor->sensor_number = sensor_num;
+    sensor->zero_position = zero_pos;
+    sensor->position = 0.0;
+    sensor->old_position = 0.0;
+    sensor->turns = 0;
+    sensor->displacement = 0.0;
+    sensor->speed = 0.0;
+    sensor->direction = 0;
+    sensor->variable_readed = NOTING_READED;
 }
 void AS5600_UpdateData(as5600_sensor *sensor)
 {
@@ -185,14 +188,13 @@ void AS5600_UpdateData(as5600_sensor *sensor)
     switch (sensor->variable_readed)
     {
         case NOTING_READED:
-        
+            
         break;
         
         case POSITION:
             sensor->position = (float)(((((uint16_t)sensor->i2c_data_received[0]) <<8) | sensor->i2c_data_received[1])*TURN_DEGREES) / (AS5600_RESOLUTION);
             sensor->variable_readed = NOTING_READED;
-            TMR1_Start();
-        
+                 
         break;
         
         case STATUS_POSITION:
@@ -229,8 +231,9 @@ void AS5600_UpdateData(as5600_sensor *sensor)
             
         break;
         
-        case CONFIG_OUTPUT_STATUS:
-        
+        case ZPOS:           
+            TMR1_Start();
+            sensor->variable_readed = NOTING_READED;
         break;
         
         default:
@@ -248,13 +251,13 @@ void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) //Read po
             I2C1_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;
         case 2:
-            I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
+            I2C4_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;    
         case 3:
             //I2C3_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;   
         case 4:
-            I2C4_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
+            I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 3);
             break;   
     }
     sensor->variable_readed = STATUS_POSITION;
@@ -262,9 +265,47 @@ void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) //Read po
 
 void AS5600_ReadPosition(as5600_sensor *sensor) //Read position variable of the as5600_sensor 
 {
-    uint8_t start_address = AS5600_RAW_ANGLE_REG;
-    I2C1_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 2);
+    uint8_t start_address = AS5600_ANGLE_REG;
+    switch(sensor->sensor_number)
+    {
+        case 1:
+            I2C1_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 2);
+        break;
+        case 2:
+            I2C4_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 2);
+        break;
+        case 3:
+            I2C2_WriteRead(AS5600_SLAVE_ADDRESS,&start_address,1, &sensor->i2c_data_received[0], 2);
+         break;
+         
+    }
+    
+    
     sensor->variable_readed = POSITION;
+    
+}
+void AS5600_Write_ZPOS(as5600_sensor *sensor) //Write the start position of the sensor
+{
+
+    uint8_t start_address = AS5600_ZPOS_REG;
+    sensor->i2c_data_send[0] = start_address;
+    sensor->i2c_data_send[1] = (uint16_t)(sensor->zero_position*AS5600_RESOLUTION/360) >> 8;
+    sensor->i2c_data_send[2] = (sensor->zero_position*AS5600_RESOLUTION/360) & 0xFF;    
+    
+    switch(sensor->sensor_number)
+    {
+        case 1:
+            I2C1_Write(AS5600_SLAVE_ADDRESS,&sensor->i2c_data_send[0],3);
+            break;
+        case 2:
+            I2C4_Write(AS5600_SLAVE_ADDRESS,&sensor->i2c_data_send[0],3);
+            break;    
+        case 3:
+            I2C2_Write(AS5600_SLAVE_ADDRESS,&sensor->i2c_data_send[0],3);
+            break;    
+    }
+
+    sensor->variable_readed = ZPOS;
     
 }
 
@@ -331,7 +372,7 @@ void AS5048A_UpdateData(as5048a_sensor *sensor)
             
         break;
         
-        case CONFIG_OUTPUT_STATUS:
+        case ZPOS:
         
         break;
         
@@ -378,6 +419,52 @@ void AS5048A_ReadStatusPosition(as5048a_sensor *sensor, uint8_t channel)
         break;
     }
 }
+void AS5048A_WriteZPOS(as5048a_sensor *sensor)
+{
+    sensor->spi_data_send[0] = AS5048A_SPI_CMD_READ | AS5048A_DIAGNOSTICS_REG;
+    sensor->spi_data_send[0] |= getParity(sensor->spi_data_send[0]) << 15;
+    sensor->spi_data_send[1] = 0;
+    sensor->spi_data_send[2]=AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_HI_REG;
+    sensor->spi_data_send[2] |= getParity(sensor->spi_data_send[2]) << 15;
+    sensor->spi_data_send[3] = (uint16_t)(sensor->zero_position*AS5048a_RESOLUTION/360) >> 6;
+    sensor->spi_data_send[3] |= getParity(sensor->spi_data_send[3]) << 15;
+    sensor->spi_data_send[4]=AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_LO_REG;
+    sensor->spi_data_send[4] |= getParity(sensor->spi_data_send[4]) << 15;
+    sensor->spi_data_send[5] = (sensor->zero_position*AS5048a_RESOLUTION/360) & 0x3F;
+    sensor->spi_data_send[5] |= getParity(sensor->spi_data_send[5]) << 15;
+    sensor->spi_data_send[6] = 0;
+    
+    /*sensor->spi_data_send[0]=AS5048A_SPI_CMD_READ | AS5048A_CLEA_RERROR_REG;
+    sensor->spi_data_send[0]= 0;
+    sensor->spi_data_send[2]=AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_HI_REG;
+    sensor->spi_data_send[2] |= getParity(sensor->spi_data_send[0]) << 15;
+    sensor->spi_data_send[3] = 0;
+    sensor->spi_data_send[4]=AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_HI_REG;
+    sensor->spi_data_send[4] |= getParity(sensor->spi_data_send[2]) << 15;
+    sensor->spi_data_send[5] = (uint16_t)(sensor->zero_position*AS5048a_RESOLUTION/360) >> 8;
+    sensor->spi_data_send[6] = AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_LO_REG;
+    sensor->spi_data_send[6] |= getParity(sensor->spi_data_send[4]) << 15;
+    sensor->spi_data_send[7] = (sensor->zero_position*AS5048a_RESOLUTION/360) & 0xFF;   
+    sensor->spi_data_send[8] = 0;*/
+    switch(sensor->sensor_number)
+    {
+        case 4:
+            AS5048_CS_1_Clear();
+            SPI1_WriteRead(&sensor->spi_data_send[0],14,&sensor->spi_data_received[0],14);
+            sensor->variable_readed = ZPOS;
+        break;
+        case 5:
+            AS5048_CS_2_Clear();
+            SPI3_WriteRead(&sensor->spi_data_send[0],10,&sensor->spi_data_received[0],10);
+            sensor->variable_readed = ZPOS;
+        break;
+        case 6:
+            AS5048_CS_3_Clear();
+            SPI4_WriteRead(&sensor->spi_data_send[0],10,&sensor->spi_data_received[0],10);
+            sensor->variable_readed = ZPOS;
+        break;
+    }
+}
 
 void AS5600_UpdateSerialData (void)
 {
@@ -399,12 +486,12 @@ void AS5600_UpdateSerialData (void)
 }
 void AS5048A_UpdateSerialData (void)
 {
-    uart_sent_data[0] = (int32_t)(sensor_4.position*100) >>24;
-    uart_sent_data[1] = (int32_t)(sensor_4.position*100) >>16;
-    uart_sent_data[2] = (int32_t)(sensor_4.position*100) >>8;
-    uart_sent_data[3] = (int32_t)(sensor_4.position*100);
-    
-    UART2_Write(&uart_sent_data[0],4);
+//    uart_sent_data[0] = (int32_t)(sensor_4.position*100) >>24;
+//    uart_sent_data[1] = (int32_t)(sensor_4.position*100) >>16;
+//    uart_sent_data[2] = (int32_t)(sensor_4.position*100) >>8;
+//    uart_sent_data[3] = (int32_t)(sensor_4.position*100);
+//    
+//    UART2_Write(&uart_sent_data[0],4);
 }
 
 bool getParity(uint16_t data)

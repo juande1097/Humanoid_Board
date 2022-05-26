@@ -178,11 +178,12 @@ void SYS_Initialize ( void* data )
     CHECONbits.PREFEN = 1;
 
 
-
+    
 	GPIO_Initialize();
 
     I2C1_Initialize();
 
+    CORETIMER_Initialize();
     I2C2_Initialize();
 
     I2C4_Initialize();

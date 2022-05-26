@@ -37,6 +37,7 @@
 #include "config/default/peripheral/spi/spi_master/plib_spi_master_common.h"
 #include "config/default/peripheral/spi/spi_master/plib_spi3_master.h"
 #include "config/default/peripheral/spi/spi_master/plib_spi4_master.h"
+#include "config/default/peripheral/coretimer/plib_coretimer.h"
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
@@ -82,7 +83,7 @@ extern "C" {
     #define AS5048A_MAGNITUDE_REG     0x3FFE
     #define AS5048A_ANGLE_REG         0x3FFF
     #define AS5048A_SPI_CMD_READ      0x4000
-    #define AS5048A_SPI_CMD_WRITE     0x4000
+    #define AS5048A_SPI_CMD_WRITE     0x0000
 
 
     #define SPEED_CONSTANT         1200
@@ -92,12 +93,13 @@ extern "C" {
     
 
 //ENUMs
-enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OUTPUT_STATUS,CLEARFLAG_POSITION};
+enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_OUTPUT_STATUS,CLEARFLAG_POSITION, ZPOS, MPOS};
 
     
     //Structures    
     typedef struct
     {
+        uint8_t                            sensor_number;          //Position number of the sensor
         float                              position;               //position of the motor in degrees
         float                              old_position;           //old position of the motor in degrees
         int16_t                            turns;                  //Motor turns in integers
@@ -106,11 +108,14 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
         uint16_t                           direction;              // 0 clockwise, 1 counterclockwise
         uint16_t                           magnet_error;          //1 error , 0 good
         uint8_t                            i2c_data_received[20];  //variable were the i2c data readed is storege
+        uint8_t                            i2c_data_send[20];
+        uint16_t                           zero_position;
         enum sensor_variable_readed        variable_readed; 
     }as5600_sensor;
     
     typedef struct
     {
+        uint8_t                            sensor_number;          //Position number of the sensor
         float                              position;               //position of the motor in degrees
         float                              old_position;           //old position of the motor in degrees
         int16_t                            turns;                  //Motor turns in integers
@@ -119,15 +124,21 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
         uint16_t                           direction;              // 0 clockwise, 1 counterclockwise
         uint16_t                           flag_error;             //
         uint16_t                           spi_data_received[20];  //variable were the i2c data readed is storege
+        uint16_t                           spi_data_send[20];
+        uint16_t                           zero_position;
         enum sensor_variable_readed        variable_readed; 
     }as5048a_sensor;
 
     /**********Module Specific Functions**********/
     void AS5600_Initialize(void);                   //Initializes the AD4111
+    void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos);
     void AS5600_UpdateData(as5600_sensor *sensor);                   //Update all the variables of the as5600_sensor struct
     void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) ;           //Read position and status variable of the as5600_sensor 
     void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
+    void AS5600_Write_ZPOS(as5600_sensor *sensor);
     void AS5600_UpdateSerialData (void);
+    void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos);
+    void AS5048A_WriteZPOS(as5048a_sensor *sensor);
     void AS5048A_UpdateSerialData (void);
     void AS5048A_ReadStatusPosition(as5048a_sensor *sensor, uint8_t channel);
     void AS5048A_ReadPosition(as5048a_sensor *sensor);
@@ -140,6 +151,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
     void I2C3_callback(uintptr_t context);
     void I2C4_callback(uintptr_t context);
     void Timer1_callback(uint32_t status, uintptr_t context);
+    
 
 
     /* Provide C++ Compatibility */

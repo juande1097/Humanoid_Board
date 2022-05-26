@@ -6,13 +6,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 99DB74296DF9943C474F4F03A700C790
-- generatedChecksum: 22E08C7A8136F2F8B55C7BFFC28B7192
+- generatedChecksum: 1969986963BD448F82CE0E8581439B0C
   logicalPath: config/default
   name: initialization.c
   physicalPath: ''
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 32E6C8CA38B76E276B0DD223103C0AED
+  userChecksum: 1215257901556BA691692F63D957B71D
 - generatedChecksum: 6F86FAAF6198C0DE7AC3D5A63AA0B6F2
   logicalPath: config/default
   name: interrupts.c
@@ -34,6 +34,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: F39B31F307601D4A2CD2903379875C77
+- generatedChecksum: F8BB2BAA74068083A80E6E229BBCF3E3
+  logicalPath: config/default/peripheral/coretimer
+  name: plib_coretimer.c
+  physicalPath: peripheral/coretimer
+  security: NON_SECURE
+  type: SOURCE
+  userChecksum: F8BB2BAA74068083A80E6E229BBCF3E3
 - generatedChecksum: C2C06A6868F37EF67CBDAE72299C911D
   logicalPath: config/default/peripheral/evic
   name: plib_evic.c
@@ -118,13 +125,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 7806B30ECAE0D18D08CD583D8775530D
-- generatedChecksum: B635329EEE9DECB34D1B9E5139914E12
+- generatedChecksum: 4A75F7560CF6F4EC1E4A8C0678D8C1EF
   logicalPath: config/default
   name: definitions.h
   physicalPath: ''
   security: NON_SECURE
   type: HEADER
-  userChecksum: B635329EEE9DECB34D1B9E5139914E12
+  userChecksum: 4A75F7560CF6F4EC1E4A8C0678D8C1EF
 - generatedChecksum: E189C26B2269F8DE46033CCD0621958D
   logicalPath: config/default
   name: device.h
@@ -146,6 +153,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 7066CC390335CF75126E2A50C46E3BDD
+- generatedChecksum: 848286252841AFE9AEEC10E0CD784605
+  logicalPath: config/default/peripheral/coretimer
+  name: plib_coretimer.h
+  physicalPath: peripheral/coretimer
+  security: NON_SECURE
+  type: HEADER
+  userChecksum: 848286252841AFE9AEEC10E0CD784605
 - generatedChecksum: 4D592E1C42727324FE2F5EB681F6C5AA
   logicalPath: config/default/peripheral/evic
   name: plib_evic.h

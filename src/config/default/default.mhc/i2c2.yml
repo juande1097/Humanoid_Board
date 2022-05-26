@@ -47,4 +47,4 @@ children:
       - type: Dynamic
         attributes: {id: i2c2, value: '800000'}
 - type: ElementPosition
-  attributes: {x: '462', y: '84', id: i2c2}
+  attributes: {x: '461', y: '85', id: i2c2}
