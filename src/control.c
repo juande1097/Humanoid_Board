@@ -16,7 +16,7 @@ extern STA_data motor_control_4;
 extern STA_data motor_control_5;
 extern STA_data motor_control_6;
 //control_data control;
-uint8_t Data_Read_U2[12] = {0};
+uint8_t Data_Read_U2[24] = {0};
 static uint8_t uart_sent_data[96] = {0};
 
 //static PID_data PID_actual_data;
@@ -26,20 +26,28 @@ static uint8_t uart_sent_data[96] = {0};
 
 void UART2_callback(uintptr_t context)
 {
-    motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
+    motor_control_1.ref = (float)(((((uint32_t)Data_Read_U2[0]) << 24) | (((uint32_t)Data_Read_U2[1]) << 16) | (((uint32_t)Data_Read_U2[2]) << 8) | Data_Read_U2[3]))/100;
+    motor_control_2.ref = (float)(((((uint32_t)Data_Read_U2[4]) << 24) | (((uint32_t)Data_Read_U2[5]) << 16) | (((uint32_t)Data_Read_U2[6]) << 8) | Data_Read_U2[7]))/100;
+    motor_control_3.ref = (float)(((((uint32_t)Data_Read_U2[8]) << 24) | (((uint32_t)Data_Read_U2[9]) << 16) | (((uint32_t)Data_Read_U2[10]) << 8) | Data_Read_U2[11]))/100;
+    motor_control_4.ref = (float)(((((uint32_t)Data_Read_U2[12]) << 24) | (((uint32_t)Data_Read_U2[13]) << 16) | (((uint32_t)Data_Read_U2[14]) << 8) | Data_Read_U2[15]))/100;
+    motor_control_5.ref = (float)(((((uint32_t)Data_Read_U2[16]) << 24) | (((uint32_t)Data_Read_U2[17]) << 16) | (((uint32_t)Data_Read_U2[18]) << 8) | Data_Read_U2[19]))/100;
+    motor_control_6.ref = (float)(((((uint32_t)Data_Read_U2[20]) << 24) | (((uint32_t)Data_Read_U2[21]) << 16) | (((uint32_t)Data_Read_U2[22]) << 8) | Data_Read_U2[23]))/100;
+    
+    /*motor_control_1.ref = (((uint16_t)Data_Read_U2[0]) << 8) + Data_Read_U2[1];
     motor_control_2.ref = (((uint16_t)Data_Read_U2[2]) << 8) + Data_Read_U2[3];
     motor_control_3.ref = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
     motor_control_4.ref = (((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7];
     motor_control_5.ref = (((uint16_t)Data_Read_U2[8]) << 8) + Data_Read_U2[9];
-    motor_control_6.ref = (((uint16_t)Data_Read_U2[10]) << 8) + Data_Read_U2[11];
+    motor_control_6.ref = (((uint16_t)Data_Read_U2[10]) << 8) + Data_Read_U2[11];*/
+    
     
     //PID_actual_data.prev_error = 0;
     //PID_actual_data.deriv_error = 0;
     //PID_actual_data.integral_error = 0;
-    UART2_Read(&Data_Read_U2[0],12);
+    UART2_Read(&Data_Read_U2[0],24);
 }
 
-void Control_initialize(uint16_t reference,STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
+void Control_initialize(float reference,STA_data *SMC_ST_data ,as5600_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {
     SMC_ST_data->ref = reference;
     SMC_ST_data->position = &sensor->position;
@@ -58,9 +66,9 @@ void Control_initialize(uint16_t reference,STA_data *SMC_ST_data ,as5600_sensor 
     
     UART2_ReadCallbackRegister(&UART2_callback,0);
     
-    UART2_Read(&Data_Read_U2[0],12);
+    UART2_Read(&Data_Read_U2[0],24);
 }
-void Control_initialize_As5048(uint16_t reference, STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
+void Control_initialize_As5048(float reference, STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {
     SMC_ST_data->ref = reference;
     SMC_ST_data->position = &sensor->position;

@@ -97,7 +97,7 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
         AS5600_ReadPosition(&sensor_3);
     
     counter++;
-    if(counter >= 100)
+    if(counter >= 50)
     {
         counter =0;
         Control_SendData();    
@@ -109,23 +109,23 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 /**********Module Specific Functions**********/
 void AS5600_Initialize(void)        ////Initializes the AD4111
 {
-    if  (humanoid_leg == 0)
+    if  (humanoid_leg == 0) //Derecha
     {
-        AS5600_SensorInit(&sensor_1,1,105);
-        AS5600_SensorInit(&sensor_2,2,105);
-        AS5600_SensorInit(&sensor_3,3,200);
-        AS5048A_SensorInit(&sensor_4,4,192);
-        AS5048A_SensorInit(&sensor_5,5,200);
-        AS5048A_SensorInit(&sensor_6,6,220);
+        AS5600_SensorInit(&sensor_1,1,117);
+        AS5600_SensorInit(&sensor_2,2,103);
+        AS5600_SensorInit(&sensor_3,3,206);
+        AS5048A_SensorInit(&sensor_4,4,178);
+        AS5048A_SensorInit(&sensor_5,5,245);
+        AS5048A_SensorInit(&sensor_6,6,221);
     }
     else
     {
-        AS5600_SensorInit(&sensor_1,1,343);
-        AS5600_SensorInit(&sensor_2,2,342); //330
-        AS5600_SensorInit(&sensor_3,3,312); //320
-        AS5048A_SensorInit(&sensor_4,4,330); //340
-        AS5048A_SensorInit(&sensor_5,5,45); //30
-        AS5048A_SensorInit(&sensor_6,6,99); //104
+        AS5600_SensorInit(&sensor_1,1,347);
+        AS5600_SensorInit(&sensor_2,2,68); 
+        AS5600_SensorInit(&sensor_3,3,299); 
+        AS5048A_SensorInit(&sensor_4,4,330); 
+        AS5048A_SensorInit(&sensor_5,5,30); 
+        AS5048A_SensorInit(&sensor_6,6,102); 
     }
         
     
