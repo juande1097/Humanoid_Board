@@ -1,9 +1,0 @@
-*.X/.generated_files/
-*.X/build/
-*.X/dist/
-*.X/debug/
-*.X/nbproject/Makefile-*
-*.X/nbproject/Package-*
-*.X/nbproject/private/
-.vscode/
-MPLABXLog.xml
