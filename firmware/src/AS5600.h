@@ -109,7 +109,7 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
         uint16_t                           magnet_error;          //1 error , 0 good
         uint8_t                            i2c_data_received[20];  //variable were the i2c data readed is storege
         uint8_t                            i2c_data_send[20];
-        uint16_t                           zero_position;
+        float                              zero_position;
         enum sensor_variable_readed        variable_readed; 
     }as5600_sensor;
     
@@ -125,19 +125,19 @@ enum sensor_variable_readed  {NOTING_READED, POSITION, STATUS_POSITION, CONFIG_O
         uint16_t                           flag_error;             //
         uint16_t                           spi_data_received[20];  //variable were the i2c data readed is storege
         uint16_t                           spi_data_send[20];
-        uint16_t                           zero_position;
+        float                           zero_position;
         enum sensor_variable_readed        variable_readed; 
     }as5048a_sensor;
 
     /**********Module Specific Functions**********/
     void AS5600_Initialize(void);                   //Initializes the AD4111
-    void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos);
+    void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, float zero_pos);
     void AS5600_UpdateData(as5600_sensor *sensor);                   //Update all the variables of the as5600_sensor struct
     void AS5600_ReadStatusPosition(as5600_sensor *sensor, uint8_t channel) ;           //Read position and status variable of the as5600_sensor 
     void AS5600_ReadPosition(as5600_sensor *sensor);                 //Read position variable of the as5600_sensor 
     void AS5600_Write_ZPOS(as5600_sensor *sensor);
     void AS5600_UpdateSerialData (void);
-    void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos);
+    void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, float zero_pos);
     void AS5048A_WriteZPOS(as5048a_sensor *sensor);
     void AS5048A_UpdateSerialData (void);
     void AS5048A_ReadStatusPosition(as5048a_sensor *sensor, uint8_t channel);

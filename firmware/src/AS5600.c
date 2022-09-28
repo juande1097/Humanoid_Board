@@ -39,17 +39,18 @@ STA_data motor_control_4;
 STA_data motor_control_5;
 STA_data motor_control_6;
 
-uint8_t humanoid_leg = 0; //0 Right, 1 Left
+uint8_t humanoid_leg = 1; //0 Right, 1 Left
 uint8_t zpos_send = 0;
 uint8_t counter_z = 0;
 
 uint16_t counter = 0;
 uint16_t counter_trajectory_period = 0;
-uint16_t trajectory_period = 10;
+uint16_t trajectory_period = 5;
 uint32_t counter_trajectory_next = 0;
 uint8_t enable_trajectory = 0;
 extern float squad_trajectory[2000][6];
-
+extern float walking_trajectory_L[2240][6];
+extern float walking_trajectory_R[2240][6];
 
 /**********Peripheral call backs **********/
 void I2C1_callback(uintptr_t context)
@@ -115,25 +116,39 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
         counter_trajectory_period =0;
         if  (humanoid_leg == 0) //Derecha
         {
-            motor_control_1.ref = 180 - squad_trajectory[counter_trajectory_next][0];
+            /*motor_control_1.ref = 180 - squad_trajectory[counter_trajectory_next][0];
             motor_control_2.ref = 180 - squad_trajectory[counter_trajectory_next][1];
             motor_control_3.ref = 180 - squad_trajectory[counter_trajectory_next][2];
             motor_control_4.ref = 180 - squad_trajectory[counter_trajectory_next][3];
             motor_control_5.ref = 180 - squad_trajectory[counter_trajectory_next][4];
             motor_control_6.ref = 180 - squad_trajectory[counter_trajectory_next][5];
+            */
+            motor_control_1.ref = 180 - walking_trajectory_R[counter_trajectory_next][0];
+            motor_control_2.ref = 180 - walking_trajectory_R[counter_trajectory_next][1];
+            motor_control_3.ref = 180 - walking_trajectory_R[counter_trajectory_next][2];
+            motor_control_4.ref = 180 - walking_trajectory_R[counter_trajectory_next][3];
+            motor_control_5.ref = 180 + walking_trajectory_R[counter_trajectory_next][4];
+            motor_control_6.ref = 180 - walking_trajectory_R[counter_trajectory_next][5];
         }
         else
         {
-            motor_control_1.ref = 180 + squad_trajectory[counter_trajectory_next][0];
+            /*motor_control_1.ref = 180 + squad_trajectory[counter_trajectory_next][0];
             motor_control_2.ref = 180 + squad_trajectory[counter_trajectory_next][1];
             motor_control_3.ref = 180 + squad_trajectory[counter_trajectory_next][2];
             motor_control_4.ref = 180 + squad_trajectory[counter_trajectory_next][3];
             motor_control_5.ref = 180 + squad_trajectory[counter_trajectory_next][4];
-            motor_control_6.ref = 180 + squad_trajectory[counter_trajectory_next][5];
+            motor_control_6.ref = 180 + squad_trajectory[counter_trajectory_next][5];*/
+            
+            motor_control_1.ref = 180 + walking_trajectory_L[counter_trajectory_next][0];
+            motor_control_2.ref = 180 + walking_trajectory_L[counter_trajectory_next][1];
+            motor_control_3.ref = 180 + walking_trajectory_L[counter_trajectory_next][2];
+            motor_control_4.ref = 180 + walking_trajectory_L[counter_trajectory_next][3];
+            motor_control_5.ref = 180 + walking_trajectory_L[counter_trajectory_next][4];
+            motor_control_6.ref = 180 + walking_trajectory_L[counter_trajectory_next][5];
         }
         
         counter_trajectory_next++;
-        if (counter_trajectory_next > 2000-1)
+        if (counter_trajectory_next > 2240-1) //change for size
         {
             counter_trajectory_next = 0;
         }
@@ -150,33 +165,33 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 /**********Module Specific Functions**********/
 void AS5600_Initialize(void)        ////Initializes the AD4111
 {
-    if  (humanoid_leg == 0) //Derecha
+    if  (humanoid_leg == 0) //Derecha the zero angle is configured here
     {
-        AS5600_SensorInit(&sensor_1,1,117);
-        AS5600_SensorInit(&sensor_2,2,283);
-        AS5600_SensorInit(&sensor_3,3,206);
-        AS5048A_SensorInit(&sensor_4,4,178);
-        AS5048A_SensorInit(&sensor_5,5,245);
-        AS5048A_SensorInit(&sensor_6,6,221);
+        AS5600_SensorInit(&sensor_1,1,118); //117 //118
+        AS5600_SensorInit(&sensor_2,2,279); //283 //283
+        AS5600_SensorInit(&sensor_3,3,205.5); //206  //206
+        AS5048A_SensorInit(&sensor_4,4,178.5); //178  //179
+        AS5048A_SensorInit(&sensor_5,5,246); //245  //244
+        AS5048A_SensorInit(&sensor_6,6,260); //265 //257
     }
     else
     {
-        AS5600_SensorInit(&sensor_1,1,347);
-        AS5600_SensorInit(&sensor_2,2,68); 
-        AS5600_SensorInit(&sensor_3,3,299); 
-        AS5048A_SensorInit(&sensor_4,4,330); 
-        AS5048A_SensorInit(&sensor_5,5,30); 
-        AS5048A_SensorInit(&sensor_6,6,102); 
+        AS5600_SensorInit(&sensor_1,1,348); //347 //348
+        AS5600_SensorInit(&sensor_2,2,78);  //68 //68
+        AS5600_SensorInit(&sensor_3,3,303); //299 //302
+        AS5048A_SensorInit(&sensor_4,4,331); //330 //331
+        AS5048A_SensorInit(&sensor_5,5,29);  //30 //27
+        AS5048A_SensorInit(&sensor_6,6,94); //102 //94
     }
         
     
     
-    Control_initialize(180,&motor_control_1,&sensor_1,1, 150, 2, 2);        //163 //285 //100 0.7 2
-    Control_initialize(180,&motor_control_2,&sensor_2,2, 150, 2, 2);        //150 //285
-    Control_initialize(180,&motor_control_3,&sensor_3,3, 150, 2.5, 2);        //140 //11
-    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 150, 2, 2); //160 //350
-    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 150, 2, 2); //210 //15
-    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 150, 2, 2); //284 //50
+    Control_initialize(180,&motor_control_1,&sensor_1,1, 400, 2, 2);        //163 //285 //100 0.7 2 //300, 2, 2); 
+    Control_initialize(180,&motor_control_2,&sensor_2,2, 400, 2, 2);        //150 //285
+    Control_initialize(180,&motor_control_3,&sensor_3,3, 400, 2, 2);        //140 //11
+    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 400, 2, 2); //160 //350
+    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 400, 2, 2); //210 //15
+    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 400, 2, 2); //284 //50
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
@@ -198,7 +213,7 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
     
 
 }
-void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos)
+void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, float zero_pos)
 {
     sensor->sensor_number = sensor_num;
     sensor->zero_position = zero_pos;
@@ -211,7 +226,7 @@ void AS5600_SensorInit(as5600_sensor *sensor, uint8_t sensor_num, uint16_t zero_
     sensor->magnet_error =0; 
     sensor->variable_readed = NOTING_READED;
 }
-void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, uint16_t zero_pos)
+void AS5048A_SensorInit(as5048a_sensor *sensor, uint8_t sensor_num, float zero_pos)
 {
     sensor->sensor_number = sensor_num;
     sensor->zero_position = zero_pos;
@@ -331,7 +346,7 @@ void AS5600_Write_ZPOS(as5600_sensor *sensor) //Write the start position of the 
     uint8_t start_address = AS5600_ZPOS_REG;
     sensor->i2c_data_send[0] = start_address;
     sensor->i2c_data_send[1] = (uint16_t)(sensor->zero_position*AS5600_RESOLUTION/360) >> 8;
-    sensor->i2c_data_send[2] = (sensor->zero_position*AS5600_RESOLUTION/360) & 0xFF;    
+    sensor->i2c_data_send[2] = (uint16_t)(sensor->zero_position*AS5600_RESOLUTION/360) & 0xFF;    
     
     switch(sensor->sensor_number)
     {
@@ -471,7 +486,7 @@ void AS5048A_WriteZPOS(as5048a_sensor *sensor)
     sensor->spi_data_send[3] |= getParity(sensor->spi_data_send[3]) << 15;
     sensor->spi_data_send[4]=AS5048A_SPI_CMD_WRITE | AS5048A_ZERO_POS_LO_REG;
     sensor->spi_data_send[4] |= getParity(sensor->spi_data_send[4]) << 15;
-    sensor->spi_data_send[5] = (sensor->zero_position*AS5048a_RESOLUTION/360) & 0x3F;
+    sensor->spi_data_send[5] = (uint16_t)(sensor->zero_position*AS5048a_RESOLUTION/360) & 0x3F;
     sensor->spi_data_send[5] |= getParity(sensor->spi_data_send[5]) << 15;
     sensor->spi_data_send[6] = 0;
     
