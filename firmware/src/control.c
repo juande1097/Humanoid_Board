@@ -28,19 +28,28 @@ extern uint16_t trajectory_period;
 
 void UART2_callback(uintptr_t context)
 {
-    if (Data_Read_U2[0] == 100 && Data_Read_U2[1] == 100)
+    if (Data_Read_U2[0] == 100 && Data_Read_U2[1] == 100) //Reads the enable to start tracking trajectories and the period to track
     {
-        enable_trajectory = Data_Read_U2[2];
-        trajectory_period = Data_Read_U2[3];
+        enable_trajectory = Data_Read_U2[2]; //enable trajectory to start
+        trajectory_period = Data_Read_U2[3]; //Period to read the trajectory points 
+        uint16_t gain_c = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
+        uint16_t gain_l1 = (((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7];
+        uint16_t gain_l2 = (((uint16_t)Data_Read_U2[8]) << 8) + Data_Read_U2[9];
+        Control_SetGains(&motor_control_1,gain_c,gain_l1,gain_l2);
+        Control_SetGains(&motor_control_2,gain_c,gain_l1,gain_l2);
+        Control_SetGains(&motor_control_3,gain_c,gain_l1,gain_l2);
+        Control_SetGains(&motor_control_4,gain_c,gain_l1,gain_l2);
+        Control_SetGains(&motor_control_5,gain_c,gain_l1,gain_l2);
+        Control_SetGains(&motor_control_6,gain_c,gain_l1,gain_l2);
     }
     else 
     {
-        motor_control_1.ref = (float)(((((uint32_t)Data_Read_U2[0]) << 24) | (((uint32_t)Data_Read_U2[1]) << 16) | (((uint32_t)Data_Read_U2[2]) << 8) | Data_Read_U2[3]))/100;
-        motor_control_2.ref = (float)(((((uint32_t)Data_Read_U2[4]) << 24) | (((uint32_t)Data_Read_U2[5]) << 16) | (((uint32_t)Data_Read_U2[6]) << 8) | Data_Read_U2[7]))/100;
-        motor_control_3.ref = (float)(((((uint32_t)Data_Read_U2[8]) << 24) | (((uint32_t)Data_Read_U2[9]) << 16) | (((uint32_t)Data_Read_U2[10]) << 8) | Data_Read_U2[11]))/100;
-        motor_control_4.ref = (float)(((((uint32_t)Data_Read_U2[12]) << 24) | (((uint32_t)Data_Read_U2[13]) << 16) | (((uint32_t)Data_Read_U2[14]) << 8) | Data_Read_U2[15]))/100;
-        motor_control_5.ref = (float)(((((uint32_t)Data_Read_U2[16]) << 24) | (((uint32_t)Data_Read_U2[17]) << 16) | (((uint32_t)Data_Read_U2[18]) << 8) | Data_Read_U2[19]))/100;
-        motor_control_6.ref = (float)(((((uint32_t)Data_Read_U2[20]) << 24) | (((uint32_t)Data_Read_U2[21]) << 16) | (((uint32_t)Data_Read_U2[22]) << 8) | Data_Read_U2[23]))/100;
+        //motor_control_1.ref = (float)(((((uint32_t)Data_Read_U2[0]) << 24) | (((uint32_t)Data_Read_U2[1]) << 16) | (((uint32_t)Data_Read_U2[2]) << 8) | Data_Read_U2[3]))/100;
+        //motor_control_2.ref = (float)(((((uint32_t)Data_Read_U2[4]) << 24) | (((uint32_t)Data_Read_U2[5]) << 16) | (((uint32_t)Data_Read_U2[6]) << 8) | Data_Read_U2[7]))/100;
+        //motor_control_3.ref = (float)(((((uint32_t)Data_Read_U2[8]) << 24) | (((uint32_t)Data_Read_U2[9]) << 16) | (((uint32_t)Data_Read_U2[10]) << 8) | Data_Read_U2[11]))/100;
+        //motor_control_4.ref = (float)(((((uint32_t)Data_Read_U2[12]) << 24) | (((uint32_t)Data_Read_U2[13]) << 16) | (((uint32_t)Data_Read_U2[14]) << 8) | Data_Read_U2[15]))/100;
+        //motor_control_5.ref = (float)(((((uint32_t)Data_Read_U2[16]) << 24) | (((uint32_t)Data_Read_U2[17]) << 16) | (((uint32_t)Data_Read_U2[18]) << 8) | Data_Read_U2[19]))/100;
+        //motor_control_6.ref = (float)(((((uint32_t)Data_Read_U2[20]) << 24) | (((uint32_t)Data_Read_U2[21]) << 16) | (((uint32_t)Data_Read_U2[22]) << 8) | Data_Read_U2[23]))/100;
     }
     
     
@@ -67,6 +76,14 @@ void Control_initialize(float reference,STA_data *SMC_ST_data ,as5600_sensor *se
     UART2_ReadCallbackRegister(&UART2_callback,0);
     
     UART2_Read(&Data_Read_U2[0],24);
+}
+
+void Control_SetGains(STA_data *SMC_ST_data, float const_c1, float const_c2, float const_b)
+{
+
+    SMC_ST_data->const_c1 = const_c1; //245 400    //el bueno para el 2 1500 0.7 2 con vibracion
+    SMC_ST_data->const_c2 = const_c2; //0.95 0.7
+    SMC_ST_data->const_b =  const_b; //0.3 2
 }
 void Control_initialize_As5048(float reference, STA_data *SMC_ST_data ,as5048a_sensor *sensor, uint8_t motor_number, float const_c1, float const_c2, float const_b)
 {

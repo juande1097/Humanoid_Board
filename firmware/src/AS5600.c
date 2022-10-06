@@ -186,12 +186,12 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
         
     
     
-    Control_initialize(180,&motor_control_1,&sensor_1,1, 400, 2, 2);        //163 //285 //100 0.7 2 //300, 2, 2); 
-    Control_initialize(180,&motor_control_2,&sensor_2,2, 400, 2, 2);        //150 //285
-    Control_initialize(180,&motor_control_3,&sensor_3,3, 400, 2, 2);        //140 //11
-    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 400, 2, 2); //160 //350
-    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 400, 2, 2); //210 //15
-    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 400, 2, 2); //284 //50
+    Control_initialize(180,&motor_control_1,&sensor_1,1, 200, 2, 2);        //163 //285 //100 0.7 2 //300, 2, 2); 
+    Control_initialize(180,&motor_control_2,&sensor_2,2, 200, 2, 2);        //150 //285
+    Control_initialize(180,&motor_control_3,&sensor_3,3, 200, 2, 2);        //140 //11
+    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 200, 2, 2); //160 //350
+    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 200, 2, 2); //210 //15
+    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 200, 2, 2); //284 //50
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 
