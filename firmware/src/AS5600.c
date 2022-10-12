@@ -40,6 +40,8 @@ STA_data motor_control_5;
 STA_data motor_control_6;
 
 uint8_t humanoid_leg = 1; //0 Right, 1 Left
+uint8_t humanoid_trajectory = 0; //0 Squats, 1 Gait
+uint16_t humanoid_traj_size[2] = {2000,2239};
 uint8_t zpos_send = 0;
 uint8_t counter_z = 0;
 
@@ -48,7 +50,7 @@ uint16_t counter_trajectory_period = 0;
 uint16_t trajectory_period = 5;
 uint32_t counter_trajectory_next = 0;
 uint8_t enable_trajectory = 0;
-extern float squad_trajectory[2000][6];
+extern float squat_trajectory[2000][6];
 extern float walking_trajectory_L[2240][6];
 extern float walking_trajectory_R[2240][6];
 
@@ -56,7 +58,7 @@ extern float walking_trajectory_R[2240][6];
 void I2C1_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_1);
-    Control_SuperTwisting(&motor_control_1);
+    Control_PID(&motor_control_1);
     
     LED4_Toggle();
 }
@@ -64,12 +66,12 @@ void I2C1_callback(uintptr_t context)
 void I2C2_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_3);
-    Control_SuperTwisting(&motor_control_3);
+    Control_PID(&motor_control_3);
 }
 void I2C4_callback(uintptr_t context)
 {
     AS5600_UpdateData(&sensor_2);
-    Control_SuperTwisting(&motor_control_2);
+    Control_PID(&motor_control_2);
     
         AS5048A_ReadStatusPosition(&sensor_4,1);
         AS5048A_ReadStatusPosition(&sensor_5,2);
@@ -82,19 +84,19 @@ void SPI1_callback(uintptr_t context)
 {
     AS5048_CS_1_Set();
     AS5048A_UpdateData(&sensor_4);
-    Control_SuperTwisting(&motor_control_4);
+    Control_PID(&motor_control_4);
 }
 void SPI3_callback(uintptr_t context)
 {
     AS5048_CS_2_Set();
     AS5048A_UpdateData(&sensor_5);
-    Control_SuperTwisting(&motor_control_5);
+    Control_PID(&motor_control_5);
 }
 void SPI4_callback(uintptr_t context)
 {
     AS5048_CS_3_Set();
     AS5048A_UpdateData(&sensor_6);
-    Control_SuperTwisting(&motor_control_6);
+    Control_PID(&motor_control_6);
 }
 void Timer1_callback(uint32_t status, uintptr_t context) //10ms
 {
@@ -116,39 +118,52 @@ void Timer1_callback(uint32_t status, uintptr_t context) //10ms
         counter_trajectory_period =0;
         if  (humanoid_leg == 0) //Derecha
         {
-            /*motor_control_1.ref = 180 - squad_trajectory[counter_trajectory_next][0];
-            motor_control_2.ref = 180 - squad_trajectory[counter_trajectory_next][1];
-            motor_control_3.ref = 180 - squad_trajectory[counter_trajectory_next][2];
-            motor_control_4.ref = 180 - squad_trajectory[counter_trajectory_next][3];
-            motor_control_5.ref = 180 - squad_trajectory[counter_trajectory_next][4];
-            motor_control_6.ref = 180 - squad_trajectory[counter_trajectory_next][5];
-            */
-            motor_control_1.ref = 180 - walking_trajectory_R[counter_trajectory_next][0];
-            motor_control_2.ref = 180 - walking_trajectory_R[counter_trajectory_next][1];
-            motor_control_3.ref = 180 - walking_trajectory_R[counter_trajectory_next][2];
-            motor_control_4.ref = 180 - walking_trajectory_R[counter_trajectory_next][3];
-            motor_control_5.ref = 180 + walking_trajectory_R[counter_trajectory_next][4];
-            motor_control_6.ref = 180 - walking_trajectory_R[counter_trajectory_next][5];
+            if (humanoid_trajectory==0)
+            {
+                motor_control_1.ref = 180 - squat_trajectory[counter_trajectory_next][0];
+                motor_control_2.ref = 180 - squat_trajectory[counter_trajectory_next][1];
+                motor_control_3.ref = 180 - squat_trajectory[counter_trajectory_next][2];
+                motor_control_4.ref = 180 - squat_trajectory[counter_trajectory_next][3];
+                motor_control_5.ref = 180 - squat_trajectory[counter_trajectory_next][4];
+                motor_control_6.ref = 180 - squat_trajectory[counter_trajectory_next][5];
+                
+            }
+            else
+            {
+                motor_control_1.ref = 180 - walking_trajectory_R[counter_trajectory_next][0];
+                motor_control_2.ref = 180 - walking_trajectory_R[counter_trajectory_next][1];
+                motor_control_3.ref = 180 - walking_trajectory_R[counter_trajectory_next][2];
+                motor_control_4.ref = 180 - walking_trajectory_R[counter_trajectory_next][3];
+                motor_control_5.ref = 180 + walking_trajectory_R[counter_trajectory_next][4];
+                motor_control_6.ref = 180 - walking_trajectory_R[counter_trajectory_next][5];
+            }
+            
         }
         else
         {
-            /*motor_control_1.ref = 180 + squad_trajectory[counter_trajectory_next][0];
-            motor_control_2.ref = 180 + squad_trajectory[counter_trajectory_next][1];
-            motor_control_3.ref = 180 + squad_trajectory[counter_trajectory_next][2];
-            motor_control_4.ref = 180 + squad_trajectory[counter_trajectory_next][3];
-            motor_control_5.ref = 180 + squad_trajectory[counter_trajectory_next][4];
-            motor_control_6.ref = 180 + squad_trajectory[counter_trajectory_next][5];*/
+            if (humanoid_trajectory==0)
+            {
+                motor_control_1.ref = 180 + squat_trajectory[counter_trajectory_next][0];
+                motor_control_2.ref = 180 + squat_trajectory[counter_trajectory_next][1];
+                motor_control_3.ref = 180 + squat_trajectory[counter_trajectory_next][2];
+                motor_control_4.ref = 180 + squat_trajectory[counter_trajectory_next][3];
+                motor_control_5.ref = 180 + squat_trajectory[counter_trajectory_next][4];
+                motor_control_6.ref = 180 + squat_trajectory[counter_trajectory_next][5];
+            }
+            else
+            {
+                motor_control_1.ref = 180 + walking_trajectory_L[counter_trajectory_next][0];
+                motor_control_2.ref = 180 + walking_trajectory_L[counter_trajectory_next][1];
+                motor_control_3.ref = 180 + walking_trajectory_L[counter_trajectory_next][2];
+                motor_control_4.ref = 180 + walking_trajectory_L[counter_trajectory_next][3];
+                motor_control_5.ref = 180 + walking_trajectory_L[counter_trajectory_next][4];
+                motor_control_6.ref = 180 + walking_trajectory_L[counter_trajectory_next][5];
+            }
             
-            motor_control_1.ref = 180 + walking_trajectory_L[counter_trajectory_next][0];
-            motor_control_2.ref = 180 + walking_trajectory_L[counter_trajectory_next][1];
-            motor_control_3.ref = 180 + walking_trajectory_L[counter_trajectory_next][2];
-            motor_control_4.ref = 180 + walking_trajectory_L[counter_trajectory_next][3];
-            motor_control_5.ref = 180 + walking_trajectory_L[counter_trajectory_next][4];
-            motor_control_6.ref = 180 + walking_trajectory_L[counter_trajectory_next][5];
         }
         
         counter_trajectory_next++;
-        if (counter_trajectory_next > 2240-1) //change for size
+        if (counter_trajectory_next > humanoid_traj_size[humanoid_trajectory]) //change for size
         {
             counter_trajectory_next = 0;
         }
@@ -186,12 +201,12 @@ void AS5600_Initialize(void)        ////Initializes the AD4111
         
     
     
-    Control_initialize(180,&motor_control_1,&sensor_1,1, 200, 2, 2);        //163 //285 //100 0.7 2 //300, 2, 2); 
-    Control_initialize(180,&motor_control_2,&sensor_2,2, 200, 2, 2);        //150 //285
-    Control_initialize(180,&motor_control_3,&sensor_3,3, 200, 2, 2);        //140 //11
-    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 200, 2, 2); //160 //350
-    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 200, 2, 2); //210 //15
-    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 200, 2, 2); //284 //50
+    Control_initialize(180,&motor_control_1,&sensor_1,1, 20, 0.08, 0.01);        //163 //285 //100 0.7 2 //300, 2, 2); 200/2/2   PID
+    Control_initialize(180,&motor_control_2,&sensor_2,2, 20, 0.08, 0.01);        //150 //285
+    Control_initialize(180,&motor_control_3,&sensor_3,3, 20, 0.08, 0.01);        //140 //11
+    Control_initialize_As5048(180,&motor_control_4,&sensor_4,4, 20, 0.08, 0.01); //160 //350
+    Control_initialize_As5048(180,&motor_control_5,&sensor_5,5, 20, 0.08, 0.01); //210 //15
+    Control_initialize_As5048(180,&motor_control_6,&sensor_6,6, 20, 0.08, 0.01); //284 //50
     
     I2C1_CallbackRegister(&I2C1_callback,0);  
     I2C2_CallbackRegister(&I2C2_callback,0); 

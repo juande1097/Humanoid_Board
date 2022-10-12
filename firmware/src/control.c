@@ -32,9 +32,9 @@ void UART2_callback(uintptr_t context)
     {
         enable_trajectory = Data_Read_U2[2]; //enable trajectory to start
         trajectory_period = Data_Read_U2[3]; //Period to read the trajectory points 
-        uint16_t gain_c = (((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5];
-        uint16_t gain_l1 = (((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7];
-        uint16_t gain_l2 = (((uint16_t)Data_Read_U2[8]) << 8) + Data_Read_U2[9];
+        float gain_c = ((((uint16_t)Data_Read_U2[4]) << 8) + Data_Read_U2[5])/100;
+        float gain_l1 = ((((uint16_t)Data_Read_U2[6]) << 8) + Data_Read_U2[7])/100;
+        float gain_l2 = ((((uint16_t)Data_Read_U2[8]) << 8) + Data_Read_U2[9])/100;
         Control_SetGains(&motor_control_1,gain_c,gain_l1,gain_l2);
         Control_SetGains(&motor_control_2,gain_c,gain_l1,gain_l2);
         Control_SetGains(&motor_control_3,gain_c,gain_l1,gain_l2);
@@ -44,12 +44,12 @@ void UART2_callback(uintptr_t context)
     }
     else 
     {
-        //motor_control_1.ref = (float)(((((uint32_t)Data_Read_U2[0]) << 24) | (((uint32_t)Data_Read_U2[1]) << 16) | (((uint32_t)Data_Read_U2[2]) << 8) | Data_Read_U2[3]))/100;
-        //motor_control_2.ref = (float)(((((uint32_t)Data_Read_U2[4]) << 24) | (((uint32_t)Data_Read_U2[5]) << 16) | (((uint32_t)Data_Read_U2[6]) << 8) | Data_Read_U2[7]))/100;
-        //motor_control_3.ref = (float)(((((uint32_t)Data_Read_U2[8]) << 24) | (((uint32_t)Data_Read_U2[9]) << 16) | (((uint32_t)Data_Read_U2[10]) << 8) | Data_Read_U2[11]))/100;
-        //motor_control_4.ref = (float)(((((uint32_t)Data_Read_U2[12]) << 24) | (((uint32_t)Data_Read_U2[13]) << 16) | (((uint32_t)Data_Read_U2[14]) << 8) | Data_Read_U2[15]))/100;
-        //motor_control_5.ref = (float)(((((uint32_t)Data_Read_U2[16]) << 24) | (((uint32_t)Data_Read_U2[17]) << 16) | (((uint32_t)Data_Read_U2[18]) << 8) | Data_Read_U2[19]))/100;
-        //motor_control_6.ref = (float)(((((uint32_t)Data_Read_U2[20]) << 24) | (((uint32_t)Data_Read_U2[21]) << 16) | (((uint32_t)Data_Read_U2[22]) << 8) | Data_Read_U2[23]))/100;
+        motor_control_1.ref = (float)(((((uint32_t)Data_Read_U2[0]) << 24) | (((uint32_t)Data_Read_U2[1]) << 16) | (((uint32_t)Data_Read_U2[2]) << 8) | Data_Read_U2[3]))/100;
+        motor_control_2.ref = (float)(((((uint32_t)Data_Read_U2[4]) << 24) | (((uint32_t)Data_Read_U2[5]) << 16) | (((uint32_t)Data_Read_U2[6]) << 8) | Data_Read_U2[7]))/100;
+        motor_control_3.ref = (float)(((((uint32_t)Data_Read_U2[8]) << 24) | (((uint32_t)Data_Read_U2[9]) << 16) | (((uint32_t)Data_Read_U2[10]) << 8) | Data_Read_U2[11]))/100;
+        motor_control_4.ref = (float)(((((uint32_t)Data_Read_U2[12]) << 24) | (((uint32_t)Data_Read_U2[13]) << 16) | (((uint32_t)Data_Read_U2[14]) << 8) | Data_Read_U2[15]))/100;
+        motor_control_5.ref = (float)(((((uint32_t)Data_Read_U2[16]) << 24) | (((uint32_t)Data_Read_U2[17]) << 16) | (((uint32_t)Data_Read_U2[18]) << 8) | Data_Read_U2[19]))/100;
+        motor_control_6.ref = (float)(((((uint32_t)Data_Read_U2[20]) << 24) | (((uint32_t)Data_Read_U2[21]) << 16) | (((uint32_t)Data_Read_U2[22]) << 8) | Data_Read_U2[23]))/100;
     }
     
     
@@ -106,7 +106,24 @@ void Control_initialize_As5048(float reference, STA_data *SMC_ST_data ,as5048a_s
     
     //UART2_Read(&Data_Read_U2[0],6);
 }
-
+void Control_PID(STA_data *SMC_ST_data)
+{
+    SMC_ST_data->prev_error = SMC_ST_data->error;
+    SMC_ST_data->error = SMC_ST_data->ref - *SMC_ST_data->position;   
+    SMC_ST_data->deriv_error = (SMC_ST_data->error - SMC_ST_data->prev_error)/SMC_ST_data->period; //derivate error
+    SMC_ST_data->sigma += SMC_ST_data->error*SMC_ST_data->period; //integral error
+    SMC_ST_data->pwm_output = (SMC_ST_data->const_c1)*SMC_ST_data->error + (SMC_ST_data->const_c2)*SMC_ST_data->sigma + (SMC_ST_data->const_b)*SMC_ST_data->deriv_error; //c1 =kp , c2 = ki, b = kd
+    
+    if (SMC_ST_data->pwm_output > 100.0)
+    {
+        SMC_ST_data->pwm_output = 100.0;
+    }
+    if (SMC_ST_data->pwm_output < -100.0)
+    {
+        SMC_ST_data->pwm_output = -100;
+    }
+    Control_SetDutyPeriod_IBT_4(*SMC_ST_data);
+}
 /*void Control_PID(float kp, float ki, float kd)
 {
     PID_actual_data.prev_error = PID_actual_data.error;
@@ -175,19 +192,12 @@ void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data)
             if (SMC_ST_data.pwm_output > 0.0) //clockwise
             {
                 duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
-                //MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
-                //Motor_dir_A_Set();
-                //Motor_dir_B_Clear();
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,0);
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,duty_period);
             }
             if (SMC_ST_data.pwm_output < 0.0) ////counterclockwise
             {
                 duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
-                //MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
-                //Motor_dir_A_Clear();
-                //Motor_dir_B_Set();
-                //duty_period = abs(SMC_ST_data.pwm_output)*(DUTY_MAX_PERIOD-1)/100;
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_1,duty_period);
                 MCPWM_ChannelPrimaryDutySet(MCPWM_CH_2,0);
             }

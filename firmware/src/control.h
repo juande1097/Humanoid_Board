@@ -93,6 +93,7 @@ extern "C" {
     void Control_SetDutyPeriod(float pwm_duty);
     void Control_SetDutyPeriod_IBT_4(STA_data SMC_ST_data);
     void Control_SuperTwisting(STA_data *SMC_ST_data);
+    void Control_PID(STA_data *SMC_ST_data);
     void Control_SendData();
     int Control_Sign(float data);
     void Control_SetGains(STA_data *SMC_ST_data, float const_c1, float const_c2, float const_b);

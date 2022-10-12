@@ -36,7 +36,7 @@
 /*  A brief description of a section can be given directly below the section
     banner.
  */
-float squad_trajectory[2000][6] = {
+float squat_trajectory[2000][6] = {
 {0,0,0,0,0,0},  
 {0,-0.023949636,0.050076511,-0.026126875,0,0},  
 {0,-0.067379837,0.141119505,-0.073682372,0,0},  
